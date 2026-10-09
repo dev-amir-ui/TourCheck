@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TourCheck · Admin Panel</title>
+<style>
+:root{--bg:#f4f6fb;--surf:#fff;--text:#16213a;--muted:#6b7692;--line:#e3e8f2;--pri:#0f6fff;--pri2:#0a54c4;--ok:#16a34a;--bad:#dc2626;--r:12px}
+@media(prefers-color-scheme:dark){:root{--bg:#0e1424;--surf:#161e33;--text:#e8edf8;--muted:#93a0bd;--line:#26314d}}
+*{box-sizing:border-box}
+body{margin:0;font:15px/1.5 system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:var(--bg);color:var(--text)}
+button{font:inherit;cursor:pointer;border:1px solid var(--line);background:var(--surf);color:var(--text);padding:8px 14px;border-radius:9px}
+button:hover{border-color:var(--pri)}
+button.pri{background:var(--pri);border-color:var(--pri);color:#fff;font-weight:600}
+button.pri:hover{background:var(--pri2)}
+button.bad{color:var(--bad)}
+button:disabled{opacity:.5;cursor:default}
+input,textarea,select{font:inherit;width:100%;padding:9px 11px;border:1px solid var(--line);border-radius:9px;background:var(--surf);color:var(--text)}
+input:focus,textarea:focus{outline:2px solid var(--pri);outline-offset:-1px}
+label{display:block;font-size:.8rem;color:var(--muted);margin:10px 0 4px;font-weight:600}
+.hide{display:none!important}
+#login{min-height:100vh;display:grid;place-items:center;padding:20px}
+.box{background:var(--surf);border:1px solid var(--line);border-radius:var(--r);padding:28px;width:100%;max-width:380px;box-shadow:0 10px 30px rgba(0,0,0,.08)}
+.box h1{margin:0 0 4px;font-size:1.3rem}
+.box p{margin:0 0 14px;color:var(--muted);font-size:.9rem}
+.err{color:var(--bad);font-size:.85rem;min-height:1.2em;margin-top:8px}
+header{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;padding:14px 22px;background:var(--surf);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:5}
+header h1{margin:0;font-size:1.1rem}
+.bar{display:flex;flex-wrap:wrap;gap:8px}
+main{max-width:1100px;margin:0 auto;padding:22px}
+.stat{color:var(--muted);margin-bottom:14px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px}
+.card{background:var(--surf);border:1px solid var(--line);border-radius:var(--r);overflow:hidden;display:flex;flex-direction:column}
+.card .img{height:120px;background:#cbd5e1 center/cover}
+.card .b{padding:14px;flex:1;display:flex;flex-direction:column;gap:6px}
+.card h3{margin:0;font-size:1.05rem}
+.tag{font-size:.75rem;color:var(--pri);font-weight:700}
+.card p{margin:0;color:var(--muted);font-size:.85rem}
+.card .act{display:flex;gap:8px;margin-top:auto;padding-top:8px}
+.empty{background:var(--surf);border:2px dashed var(--line);border-radius:var(--r);padding:40px;text-align:center;color:var(--muted)}
+.modal{position:fixed;inset:0;background:rgba(5,10,25,.55);display:grid;place-items:center;padding:16px;z-index:20;overflow:auto}
+.modal .m{background:var(--surf);border-radius:var(--r);width:100%;max-width:760px;max-height:92vh;overflow:auto;padding:22px}
+.m h2{margin:0 0 6px}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.row3{display:grid;grid-template-columns:1fr 1fr 80px;gap:12px}
+.place{display:grid;grid-template-columns:1fr 2fr auto;gap:8px;margin-bottom:8px;align-items:start}
+.prev{height:110px;border-radius:9px;background:#cbd5e1 center/cover;margin-top:8px}
+.foot{display:flex;justify-content:flex-end;gap:8px;margin-top:18px}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#111827;color:#fff;padding:10px 18px;border-radius:10px;z-index:50;font-size:.9rem}
+.toast.bad{background:var(--bad)}.toast.ok{background:var(--ok)}
+.drop{border:2px dashed var(--line);border-radius:var(--r);padding:26px;text-align:center;color:var(--muted);cursor:pointer}
+.drop.over{border-color:var(--pri);color:var(--pri)}
+.sum{background:var(--bg);border-radius:9px;padding:12px;margin:12px 0;font-size:.9rem}
+.sum li{margin:2px 0}
+.tabs{display:flex;gap:6px;padding:10px 22px 0;background:var(--surf);border-bottom:1px solid var(--line)}
+.tabs button{border:0;border-bottom:3px solid transparent;border-radius:0;background:none;padding:8px 14px;font-weight:600;color:var(--muted)}
+.tabs button.on{color:var(--pri);border-bottom-color:var(--pri)}
+.badge{display:inline-block;background:var(--bad);color:#fff;border-radius:999px;font-size:.72rem;padding:1px 7px;margin-left:6px}
+table{width:100%;border-collapse:collapse;background:var(--surf);border:1px solid var(--line);border-radius:var(--r);overflow:hidden;font-size:.88rem}
+th,td{padding:10px 12px;text-align:left;border-bottom:1px solid var(--line);vertical-align:top}
+th{background:var(--bg);color:var(--muted);font-size:.75rem;text-transform:uppercase}
+tr.new td{background:rgba(15,111,255,.07)}
+td select{padding:5px 8px;width:auto}
+td a{color:var(--pri);text-decoration:none}
+@media(max-width:620px){.row,.row3,.place{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<!-- CODE LOGIN -->
+<section id="login">
+  <div class="box">
+    <h1>🔐 TourCheck Admin</h1>
+    <p>Enter the administrator access code.</p>
+    <input id="code" type="password" placeholder="Access code" autocomplete="current-password">
+    <div class="err" id="loginErr"></div>
+    <button class="pri" id="loginBtn" style="width:100%;margin-top:6px">Sign in</button>
+  </div>
+</section>
+
+<!-- PANEL -->
+<section id="app" class="hide">
+  <header>
+    <h1>📍 Popular Travel Regions</h1>
+    <div class="bar" id="regBar">
+      <button class="pri" id="importBtn">⬆️ Upload JSON</button>
+      <button id="addBtn">＋ New region</button>
+      <button id="exportBtn">⬇️ Export</button>
+      <button id="reloadBtn">⟳</button>
+      <button id="logoutBtn">Sign out</button>
+    </div>
+  </header>
+  <div class="tabs">
+    <button id="tabReg" class="on">📍 Regions</button>
+    <button id="tabRes">🎫 Reservations<span class="badge hide" id="resBadge">0</span></button>
+  </div>
+  <main>
+    <div id="viewReg">
+      <div class="stat" id="stat"></div>
+      <div class="grid" id="list"></div>
+    </div>
+    <div id="viewRes" class="hide">
+      <div class="bar" style="margin-bottom:12px">
+        <input id="rSearch" placeholder="Search: name, phone, tour…" style="max-width:280px">
+        <select id="rFilter" style="width:auto">
+          <option value="">All statuses</option><option value="new">New</option><option value="confirmed">Confirmed</option>
+          <option value="done">Completed</option><option value="cancelled">Cancelled</option>
+        </select>
+        <button id="rExport">⬇️ CSV</button>
+      </div>
+      <div class="stat" id="rStat"></div>
+      <div style="overflow:auto"><table><thead><tr>
+        <th>Created</th><th>Guest</th><th>Tour</th><th>Date / time</th><th>Seats</th><th>Total</th><th>Status</th><th></th>
+      </tr></thead><tbody id="rBody"></tbody></table></div>
+    </div>
+  </main>
+</section>
+
+<div id="modalRoot"></div>
+<input type="file" id="file" accept=".json,application/json" class="hide">
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import { getFirestore, collection, getDocs, doc, setDoc, updateDoc, deleteDoc, writeBatch, serverTimestamp, onSnapshot, query, orderBy } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyCuXw7P8HIFbA0FaHgf_KVN3w7QyKicW2c",
+  authDomain: "tourcheck-62390.firebaseapp.com",
+  projectId: "tourcheck-62390",
+  storageBucket: "tourcheck-62390.firebasestorage.app",
+  messagingSenderId: "982488738061",
+  appId: "1:982488738061:web:dd510dfa930aac936de844"
+};
+
+/* Service e-mail of the admin. Its Firebase Authentication password is the "access code". */
+const ADMIN_EMAIL = "admin@tourcheck.az";
+
+/* JSON id → site region id + default image/weather */
+const ID_MAP = {"baku-absheron":"baku","quba-khinalig":"quba","qusar-shahdag":"qusar","gabala":"gabala","sheki":"sheki","lankaran-lerik":"lenkeran","ganja-goygol":"goygol","shusha-karabakh":"shusha","ismayilli-lahic":"ismayilli"};
+const DEFAULTS = {"baku":{"image":"https://images.unsplash.com/photo-1549144511-f099e773c147?auto=format&fit=crop&w=800&q=80","weather":{"temp":"22°C","text":"Açıq hava","icon":"☀️"},"liveKey":"baku"},"quba":{"image":"https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=800&q=80","weather":{"temp":"15°C","text":"Sərin dağ havası","icon":"⛅"},"liveKey":"quba"},"qusar":{"image":"https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&w=800&q=80","weather":{"temp":"11°C","text":"Dağ mehi","icon":"🏔️"},"liveKey":""},"gabala":{"image":"https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=800&q=80","weather":{"temp":"19°C","text":"Mülayim","icon":"🌤️"},"liveKey":"gabala"},"sheki":{"image":"https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=800&q=80","weather":{"temp":"20°C","text":"Gözəl hava","icon":"☀️"},"liveKey":"sheki"},"lenkeran":{"image":"https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=800&q=80","weather":{"temp":"23°C","text":"Subtropik istilik","icon":"🌿"},"liveKey":"lankaran"},"goygol":{"image":"https://images.unsplash.com/photo-1439853949127-fa647821eba0?auto=format&fit=crop&w=800&q=80","weather":{"temp":"17°C","text":"Şəffaf səma","icon":"🏞️"},"liveKey":""},"shusha":{"image":"https://images.unsplash.com/photo-1486870591958-9b9d0d1dda99?auto=format&fit=crop&w=800&q=80","weather":{"temp":"16°C","text":"Təmiz dağ havası","icon":"🏰"},"liveKey":"shusha"},"ismayilli":{"image":"https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?auto=format&fit=crop&w=800&q=80","weather":{"temp":"18°C","text":"Təmiz hava","icon":"🍃"},"liveKey":"ismayilli"}};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+const $ = id => document.getElementById(id);
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+let regions = [];
+
+function toast(msg, type = "") {
+  const t = document.createElement("div");
+  t.className = "toast " + type; t.textContent = msg;
+  document.body.appendChild(t); setTimeout(() => t.remove(), 3500);
+}
+
+/* ---------- Login ---------- */
+async function login() {
+  const code = $("code").value.trim();
+  $("loginErr").textContent = "";
+  if (!code) return;
+  $("loginBtn").disabled = true;
+  try {
+    await signInWithEmailAndPassword(auth, ADMIN_EMAIL, code);
+  } catch (e) {
+    const bad = ["auth/invalid-credential", "auth/wrong-password", "auth/invalid-login-credentials", "auth/user-not-found"];
+    $("loginErr").textContent = bad.includes(e.code) ? "Invalid code." :
+      e.code === "auth/too-many-requests" ? "Too many attempts. Please wait a moment." :
+      "Sign-in error: " + (e.code || e.message);
+  }
+  $("loginBtn").disabled = false;
+}
+$("loginBtn").onclick = login;
+$("code").addEventListener("keydown", e => { if (e.key === "Enter") login(); });
+$("logoutBtn").onclick = () => signOut(auth);
+onAuthStateChanged(auth, user => {
+  const ok = user && user.email === ADMIN_EMAIL;
+  $("login").classList.toggle("hide", !!ok);
+  $("app").classList.toggle("hide", !ok);
+  if (ok) { load(); startReservations(); } else { stopReservations(); $("code").value = ""; }
+});
+
+/* ---------- Data ---------- */
+async function load() {
+  try {
+    const snap = await getDocs(collection(db, "regions"));
+    regions = snap.docs.map(d => ({ id: d.id, ...d.data() }))
+      .sort((a, b) => (a.order ?? 99) - (b.order ?? 99) || String(a.name).localeCompare(String(b.name)));
+    renderList();
+  } catch (e) {
+    toast("Failed to load: " + (e.code || e.message), "bad");
+  }
+}
+function renderList() {
+  const places = regions.reduce((n, r) => n + (r.places?.length || 0), 0);
+  $("stat").textContent = `In database: ${regions.length} regions, ${places} places`;
+  if (!regions.length) {
+    $("list").innerHTML = `<div class="empty" style="grid-column:1/-1">The database is empty.<br>Click “⬆️ Upload JSON” and choose your regions file.</div>`;
+    return;
+  }
+  $("list").innerHTML = regions.map(r => `
+    <div class="card">
+      <div class="img" style="background-image:url('${esc(r.image)}')"></div>
+      <div class="b">
+        <span class="tag">${esc(r.tag)}</span>
+        <h3>${esc(r.name)}</h3>
+        <p>${esc(r.desc)}</p>
+        <p>📍 places: <b>${r.places?.length || 0}</b></p>
+        <div class="act">
+          <button data-edit="${esc(r.id)}">✏️ Edit</button>
+          <button class="bad" data-del="${esc(r.id)}">Delete</button>
+        </div>
+      </div>
+    </div>`).join("");
+}
+$("list").addEventListener("click", async e => {
+  const ed = e.target.closest("[data-edit]"), dl = e.target.closest("[data-del]");
+  if (ed) openEditor(regions.find(r => r.id === ed.dataset.edit));
+  if (dl) {
+    const r = regions.find(x => x.id === dl.dataset.del);
+    if (confirm(`Delete region “${r.name}”?`)) {
+      try { await deleteDoc(doc(db, "regions", r.id)); toast("Deleted", "ok"); load(); }
+      catch (err) { toast("Error: " + (err.code || err.message), "bad"); }
+    }
+  }
+});
+$("reloadBtn").onclick = load;
+$("addBtn").onclick = () => openEditor(null);
+
+/* ---------- Region editor ---------- */
+function closeModal() { $("modalRoot").innerHTML = ""; }
+function placeRow(p = {}) {
+  return `<div class="place">
+    <input class="pn" placeholder="Name" value="${esc(p.name)}">
+    <input class="pd" placeholder="Description" value="${esc(p.description)}">
+    <button type="button" class="bad prm">✕</button></div>`;
+}
+function openEditor(r) {
+  const isNew = !r;
+  r = r || { id: "", name: "", tag: "", desc: "", image: "", weather: { temp: "", text: "", icon: "☀️" }, liveKey: "", order: regions.length + 1, places: [] };
+  const w = r.weather || {};
+  $("modalRoot").innerHTML = `<div class="modal"><div class="m">
+    <h2>${isNew ? "New region" : "Edit region"}</h2>
+    <div class="row">
+      <div><label>ID (Latin letters, no spaces)</label><input id="eId" value="${esc(r.id)}" ${isNew ? "" : "disabled"}></div>
+      <div><label>Order</label><input id="eOrder" type="number" value="${esc(r.order ?? 1)}"></div>
+    </div>
+    <label>Name</label><input id="eName" value="${esc(r.name)}">
+    <label>Category (tag on the card)</label><input id="eTag" value="${esc(r.tag)}">
+    <label>Description</label><textarea id="eDesc" rows="2">${esc(r.desc)}</textarea>
+    <label>Image URL</label><input id="eImg" value="${esc(r.image)}">
+    <div class="prev" id="ePrev" style="background-image:url('${esc(r.image)}')"></div>
+    <div class="row3">
+      <div><label>Temperature</label><input id="wT" value="${esc(w.temp)}" placeholder="22°C"></div>
+      <div><label>Weather</label><input id="wX" value="${esc(w.text)}" placeholder="Açıq hava"></div>
+      <div><label>Icon</label><input id="wI" value="${esc(w.icon)}"></div>
+    </div>
+    <label>Live Checker key (optional: baku, quba, gabala, sheki, lankaran, shusha, ismayilli)</label>
+    <input id="eKey" value="${esc(r.liveKey)}">
+    <label>Places (${(r.places || []).length})</label>
+    <div id="ePlaces">${(r.places || []).map(placeRow).join("")}</div>
+    <button type="button" id="addPlace">＋ Add place</button>
+    <div class="foot"><button id="cancel">Cancel</button><button class="pri" id="save">Save</button></div>
+  </div></div>`;
+  $("eImg").oninput = () => $("ePrev").style.backgroundImage = `url('${$("eImg").value}')`;
+  $("addPlace").onclick = () => $("ePlaces").insertAdjacentHTML("beforeend", placeRow());
+  $("ePlaces").onclick = e => { if (e.target.classList.contains("prm")) e.target.closest(".place").remove(); };
+  $("cancel").onclick = closeModal;
+  $("save").onclick = async () => {
+    const id = $("eId").value.trim();
+    if (!/^[a-z0-9-_]+$/i.test(id) || !$("eName").value.trim()) return toast("ID (Latin letters) and name are required", "bad");
+    if (isNew && regions.some(x => x.id === id)) return toast("This ID already exists", "bad");
+    const places = [...document.querySelectorAll("#ePlaces .place")].map((row, i) => ({
+      id: `${id}-${String(i + 1).padStart(2, "0")}`,
+      name: row.querySelector(".pn").value.trim(),
+      description: row.querySelector(".pd").value.trim()
+    })).filter(p => p.name);
+    const data = {
+      name: $("eName").value.trim(), tag: $("eTag").value.trim(), desc: $("eDesc").value.trim(),
+      image: $("eImg").value.trim(),
+      weather: { temp: $("wT").value.trim(), text: $("wX").value.trim(), icon: $("wI").value.trim() || "☀️" },
+      liveKey: $("eKey").value.trim(), order: Number($("eOrder").value) || 1,
+      places, updatedAt: serverTimestamp()
+    };
+    $("save").disabled = true;
+    try { await setDoc(doc(db, "regions", id), data); toast("Saved", "ok"); closeModal(); load(); }
+    catch (e) { toast("Error: " + (e.code || e.message), "bad"); $("save").disabled = false; }
+  };
+}
+
+/* ---------- JSON import ---------- */
+$("importBtn").onclick = () => openImport();
+function openImport() {
+  $("modalRoot").innerHTML = `<div class="modal"><div class="m">
+    <h2>Upload JSON</h2>
+    <div class="drop" id="drop">Drag a file here or click to choose<br><small>format: { regions: [ { id, name, category, description, places: [...] } ] }</small></div>
+    <div id="impBody"></div>
+    <div class="foot"><button id="cancel">Close</button></div>
+  </div></div>`;
+  $("cancel").onclick = closeModal;
+  const drop = $("drop");
+  drop.onclick = () => $("file").click();
+  drop.ondragover = e => { e.preventDefault(); drop.classList.add("over"); };
+  drop.ondragleave = () => drop.classList.remove("over");
+  drop.ondrop = e => { e.preventDefault(); drop.classList.remove("over"); if (e.dataTransfer.files[0]) readFile(e.dataTransfer.files[0]); };
+}
+$("file").onchange = e => { if (e.target.files[0]) readFile(e.target.files[0]); e.target.value = ""; };
+
+function readFile(f) {
+  const rd = new FileReader();
+  rd.onload = () => {
+    try {
+      const json = JSON.parse(rd.result);
+      const src = Array.isArray(json) ? json : json.regions;
+      if (!Array.isArray(src) || !src.length) throw new Error("no regions array");
+      const docs = src.map((r, i) => {
+        const id = ID_MAP[r.id] || r.id;
+        const d = DEFAULTS[id] || {};
+        const old = regions.find(x => x.id === id) || {};
+        return { id, data: {
+          name: r.name, tag: r.category ?? r.tag ?? "", desc: r.description ?? r.desc ?? "",
+          image: r.image || old.image || d.image || "",
+          weather: r.weather || old.weather || d.weather || { temp: "", text: "", icon: "☀️" },
+          liveKey: old.liveKey ?? d.liveKey ?? "",
+          order: i + 1,
+          places: (r.places || []).map((p, j) => ({ id: p.id || `${id}-${String(j + 1).padStart(2, "0")}`, name: p.name, description: p.description || "" }))
+        }};
+      });
+      const total = docs.reduce((n, d) => n + d.data.places.length, 0);
+      $("impBody").innerHTML = `<div class="sum"><b>Found: ${docs.length} regions, ${total} places</b><ul>
+        ${docs.map(d => `<li>${esc(d.data.name)} — ${d.data.places.length} places${regions.some(r => r.id === d.id) ? " <i>(will replace existing)</i>" : ""}</li>`).join("")}
+        </ul></div><button class="pri" id="go" style="width:100%">Upload to Firebase</button>`;
+      $("go").onclick = async () => {
+        $("go").disabled = true; $("go").textContent = "Uploading…";
+        try {
+          const batch = writeBatch(db);
+          docs.forEach(d => batch.set(doc(db, "regions", d.id), { ...d.data, updatedAt: serverTimestamp() }));
+          await batch.commit();
+          toast(`Uploaded: ${docs.length} regions, ${total} places`, "ok");
+          closeModal(); load();
+        } catch (e) { toast("Error: " + (e.code || e.message), "bad"); $("go").disabled = false; $("go").textContent = "Upload to Firebase"; }
+      };
+    } catch (e) { $("impBody").innerHTML = `<div class="err">Could not read file: ${esc(e.message)}</div>`; }
+  };
+  rd.readAsText(f, "utf-8");
+}
+
+/* ---------- Export ---------- */
+$("exportBtn").onclick = () => {
+  const out = { title: "TourCheck regions", regionCount: regions.length, placeCount: regions.reduce((n, r) => n + (r.places?.length || 0), 0),
+    regions: regions.map(({ updatedAt, ...r }) => r) };
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(new Blob([JSON.stringify(out, null, 2)], { type: "application/json" }));
+  a.download = "regions-export.json"; a.click();
+};
+
+/* ---------- Reservations ---------- */
+let reservations = [], unsubRes = null, firstSnap = true;
+const STATUS = { new: "New", confirmed: "Confirmed", done: "Completed", cancelled: "Cancelled" };
+function startReservations() {
+  stopReservations(); firstSnap = true;
+  unsubRes = onSnapshot(query(collection(db, "reservations"), orderBy("createdAt", "desc")), snap => {
+    reservations = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+    if (!firstSnap) snap.docChanges().forEach(c => { if (c.type === "added" && !c.doc.metadata.hasPendingWrites) toast("🎫 New reservation: " + (c.doc.data().guestName || ""), "ok"); });
+    firstSnap = false;
+    renderRes();
+  }, e => toast("Reservations: " + (e.code || e.message), "bad"));
+}
+function stopReservations() { if (unsubRes) unsubRes(); unsubRes = null; reservations = []; }
+function filteredRes() {
+  const q = $("rSearch").value.trim().toLowerCase(), f = $("rFilter").value;
+  return reservations.filter(r => (!f || r.status === f) &&
+    (!q || [r.guestName, r.phone, r.tourName, r.city, r.id].join(" ").toLowerCase().includes(q)));
+}
+function renderRes() {
+  const nNew = reservations.filter(r => r.status === "new").length;
+  $("resBadge").textContent = nNew; $("resBadge").classList.toggle("hide", !nNew);
+  const list = filteredRes();
+  const sum = list.filter(r => r.status !== "cancelled").reduce((n, r) => n + (r.total || 0), 0);
+  $("rStat").textContent = `Showing: ${list.length} of ${reservations.length} · total (excluding cancelled): ${sum} ₼`;
+  $("rBody").innerHTML = list.length ? list.map(r => `<tr class="${r.status === "new" ? "new" : ""}">
+    <td>${esc(r.createdAtISO ? new Date(r.createdAtISO).toLocaleString("en-GB") : "")}<br><small style="color:var(--muted)">${esc(r.id)}</small></td>
+    <td><b>${esc(r.guestName)}</b><br><a href="tel:${esc(r.phone)}">${esc(r.phone)}</a></td>
+    <td>${esc(r.tourName)}<br><small style="color:var(--muted)">${esc(r.city)}${r.place ? " · " + esc(r.place) : ""}</small></td>
+    <td>${esc(r.date)}<br>${esc(r.time)}</td>
+    <td>${esc(r.seats)}</td>
+    <td>${esc(r.total)} ₼</td>
+    <td><select data-st="${esc(r.id)}">${Object.entries(STATUS).map(([k, v]) => `<option value="${k}" ${r.status === k ? "selected" : ""}>${v}</option>`).join("")}</select></td>
+    <td><button class="bad" data-rdel="${esc(r.id)}">✕</button></td></tr>`).join("")
+    : `<tr><td colspan="8" style="text-align:center;color:var(--muted);padding:30px">No reservations yet</td></tr>`;
+}
+$("rBody").addEventListener("change", async e => {
+  const sel = e.target.closest("[data-st]"); if (!sel) return;
+  try { await updateDoc(doc(db, "reservations", sel.dataset.st), { status: sel.value }); }
+  catch (err) { toast("Error: " + (err.code || err.message), "bad"); }
+});
+$("rBody").addEventListener("click", async e => {
+  const b = e.target.closest("[data-rdel]"); if (!b) return;
+  if (confirm("Delete this reservation permanently?")) {
+    try { await deleteDoc(doc(db, "reservations", b.dataset.rdel)); } catch (err) { toast("Error: " + (err.code || err.message), "bad"); }
+  }
+});
+$("rSearch").oninput = renderRes; $("rFilter").onchange = renderRes;
+$("rExport").onclick = () => {
+  const q = v => `"${String(v ?? "").replace(/"/g, '""')}"`;
+  const rows = [["Created", "ID", "Guest", "Phone", "Tour", "City", "Date", "Time", "Seats", "Total", "Status"]]
+    .concat(filteredRes().map(r => [r.createdAtISO, r.id, r.guestName, r.phone, r.tourName, r.city, r.date, r.time, r.seats, r.total, STATUS[r.status] || r.status]));
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(new Blob(["\ufeff" + rows.map(r => r.map(q).join(",")).join("\n")], { type: "text/csv;charset=utf-8" }));
+  a.download = "reservations.csv"; a.click();
+};
+function showTab(res) {
+  $("viewReg").classList.toggle("hide", res); $("viewRes").classList.toggle("hide", !res);
+  $("regBar").classList.toggle("hide", res);
+  $("tabReg").classList.toggle("on", !res); $("tabRes").classList.toggle("on", res);
+}
+$("tabReg").onclick = () => showTab(false); $("tabRes").onclick = () => showTab(true);
+</script>
+</body>
+</html>

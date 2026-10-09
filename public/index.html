@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+<html lang="az" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title data-i18n="siteTitle">TourCheck — Azərbaycan Turları & Canlı Bilet Yoxlama</title>
+  <meta name="description" content="Azərbaycanın bütün bölgələrinə turlar: qiymət, giriş biletləri, tövsiyələr və canlı boş yer yoxlaması." />
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/styles.css" />
+  <link rel="stylesheet" href="css/overrides.css" />
+</head>
+<body>
+
+  <!-- Yuxarı Məlumat Zolağı (Top Notification Bar) -->
+  <aside class="top-bar" aria-label="Xüsusi elan">
+    <div class="container top-bar-inner">
+      <div class="top-bar-left">
+        <span class="pulse-dot"></span>
+        <span class="top-bar-text">🇦🇿 <strong>TourCheck Canlı Sistem:</strong> Bütün rayonlar üzrə boş yerlər anında yenilənir!</span>
+      </div>
+      <div class="top-bar-right">
+        <span class="support-phone">📞 24/7 Dəstək: <strong>*8899</strong></span>
+        <span class="currency-tag">Valyuta: <strong>AZN (₼)</strong></span>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Əsas Başlıq (Header) -->
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="logo" href="#top">
+        <span class="logo-mark">
+          <svg viewBox="0 0 32 32" width="22" height="22" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M16 2L3 27H29L16 2Z" fill="currentColor"/>
+            <path d="M16 11L9 24H23L16 11Z" fill="#fff" opacity="0.9"/>
+            <circle cx="16" cy="18" r="3" fill="#f59e0b"/>
+          </svg>
+        </span>
+        <span class="logo-text">Tour<span>Check</span></span>
+      </a>
+
+      <!-- Əsas Menyu -->
+      <nav class="nav-menu" id="navMenu">
+        <a href="#liveCheck" class="nav-link nav-live" data-i18n="navLiveCheck">
+          <span class="nav-live-icon">⚡</span> Canlı Yoxlama
+        </a>
+        <a href="#regions" class="nav-link" data-i18n="navRegions">Bölgələr</a>
+        <a href="#tips" class="nav-link" data-i18n="navTips">Tövsiyələr</a>
+        <a href="#calculator" class="nav-link" data-i18n="navCalculator">Kalkulyator</a>
+        <a href="#bookings" class="nav-link" data-i18n="navBookings">
+          Rezervlərim <span id="bookingCount" class="badge-pill">0</span>
+        </a>
+      </nav>
+
+      <!-- Sağ Tənzimləmələr: Dil seçimi, Sevimlilər, Qaranlıq Rejim -->
+      <div class="header-actions">
+        <!-- Dil Seçimi (Language Switcher) -->
+        <div class="lang-switcher" aria-label="Dil seçimi">
+          <button type="button" class="lang-btn active" data-lang="az" title="Azərbaycan dili">AZ</button>
+          <button type="button" class="lang-btn" data-lang="en" title="English">EN</button>
+          <button type="button" class="lang-btn" data-lang="ru" title="Русский">RU</button>
+        </div>
+
+        <!-- Sevimlilər (Wishlist) düyməsi -->
+        <button type="button" class="icon-btn wishlist-toggle-btn" id="wishlistToggleBtn" title="Sevimlilər siyahısı" aria-label="Sevimlilər">
+          <span>❤️</span>
+          <span id="wishlistCount" class="badge-count">0</span>
+        </button>
+
+        <!-- Qaranlıq/İşıqlı Rejim Toggle -->
+        <button type="button" class="icon-btn theme-toggle-btn" id="themeToggle" title="Gecə/Gündüz rejimi" aria-label="Tema dəyiş">
+          <span id="themeIcon">🌙</span>
+        </button>
+
+        <!-- Mobil Menyu Açarı -->
+        <button type="button" class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Menyunu aç">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main id="top">
+    <!-- Qəhrəman Bölməsi (Hero Section) -->
+    <section class="hero-section">
+      <div class="hero-bg-overlay"></div>
+      <div class="container hero-container">
+        <div class="hero-content">
+          <div class="hero-badge">
+            <span class="badge-sparkle">✨</span>
+            <span data-i18n="heroBadge">🇦🇿 Azərbaycanın 1 nömrəli tur və bilet platforması</span>
+          </div>
+          <h1 class="hero-title" data-i18n="heroTitle">
+            Gözəl Qarabağdan Şahdağa: Turlar və Boş Yerləri Canlı Yoxla
+          </h1>
+          <p class="hero-subtitle" data-i18n="heroDesc">
+            Bölgəni seç, büdcəni yoxla, canlı boş yerləri dərhal gör və bir kliklə biletini rezerv et.
+          </p>
+          <div class="hero-actions">
+            
+            <a href="#liveCheck" class="btn btn-hero btn-glass" data-i18n="heroBtnLive">⚡ Canlı Büdcə Yoxlaması</a>
+          </div>
+
+          <!-- Canlı Metriklər (Quick Stats) -->
+          <div class="hero-stats">
+            <div class="stat-item">
+              <strong class="stat-number">12+</strong>
+              <span class="stat-label" data-i18n="statTours">Aktiv Tur</span>
+            </div>
+            <div class="stat-divider"></div>
+            <div class="stat-item">
+              <strong class="stat-number">9+</strong>
+              <span class="stat-label" data-i18n="statRegions">Rayon & Şəhər</span>
+            </div>
+            <div class="stat-divider"></div>
+            <div class="stat-item">
+              <strong class="stat-number">4.9★</strong>
+              <span class="stat-label" data-i18n="statSatisfaction">Müştəri Məmnuniyyəti</span>
+            </div>
+            <div class="stat-divider"></div>
+            <div class="stat-item">
+              <strong class="stat-number">100%</strong>
+              <span class="stat-label" data-i18n="statLiveSeats">Canlı Yer Nəzarəti</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CANLI YOXLAMA VƏ AĞILLI BÜDCƏ BƏLƏDÇİSİ (LIVE BUDGET & DESTINATION MATCHER) -->
+    <section id="liveCheck" class="live-check-section">
+      <div class="container">
+        <div class="section-head text-center">
+          <div class="pill-label">⚡ Real-vaxt Yoxlama Mühərriki</div>
+          <h2 data-i18n="liveCheckTitle">Canlı Büdcə və Məkan Yoxlaması</h2>
+          <p data-i18n="liveCheckSubtitle">Büdcənizi və istəyinizi daxil edin — sistem dərhal sizə uyğun rayon və turları tapsın!</p>
+        </div>
+
+        <div class="live-check-card">
+          <div class="live-check-controls">
+            <!-- Büdcə Slidersi və Giriş xanası -->
+            <div class="form-group-budget">
+              <div class="budget-label-row">
+                <label for="liveBudgetNumber" data-i18n="liveBudgetLabel">Büdcəniz (nəfər başına)</label>
+                <div class="budget-input-wrapper">
+                  <input type="number" id="liveBudgetNumber" min="15" max="150" value="50" step="5" />
+                  <span class="currency-sign">₼</span>
+                </div>
+              </div>
+              <input type="range" id="liveBudgetRange" min="15" max="150" value="50" step="5" class="custom-range" />
+              
+              <!-- Sürətli Büdcə Presetləri -->
+              <div class="budget-presets-row">
+                <button type="button" class="budget-preset" data-budget="25">25 ₼</button>
+                <button type="button" class="budget-preset" data-budget="35">35 ₼</button>
+                <button type="button" class="budget-preset active" data-budget="50">50 ₼</button>
+                <button type="button" class="budget-preset" data-budget="65">65 ₼</button>
+                <button type="button" class="budget-preset" data-budget="80">80 ₼</button>
+              </div>
+            </div>
+
+            <div class="live-filter-row">
+              <div class="filter-col">
+                <label for="liveRegion" data-i18n="liveRegionLabel">İstədiyiniz Region</label>
+                <select id="liveRegion"></select>
+              </div>
+              <div class="filter-col">
+                <label for="liveVibe" data-i18n="liveVibeLabel">Tur Növü</label>
+                <select id="liveVibe">
+                  <option value="" data-i18n="allVibes">Bütün Növlər</option>
+                  <option value="adventure" data-i18n="vibeAdventure">Macəra və Ekstrim</option>
+                  <option value="nature" data-i18n="vibeNature">Dağ və Təbiət</option>
+                  <option value="culture" data-i18n="vibeCulture">Tarix və Mədəniyyət</option>
+                  <option value="relax" data-i18n="vibeRelax">İstirahət və Qastronomiya</option>
+                  <option value="family" data-i18n="vibeFamily">Ailəvi İstirahət</option>
+                </select>
+              </div>
+              <div class="filter-col">
+                <label for="livePersons" data-i18n="livePersonsLabel">Səyahətçi sayı</label>
+                <input type="number" id="livePersons" min="1" max="20" value="1" />
+              </div>
+            </div>
+
+            <div class="ai-controls">
+              <textarea id="aiInput" rows="3"></textarea>
+              <div class="ai-row">
+                <input id="aiWhen" type="text" />
+                <input id="aiRadius" type="number" min="1" max="50" value="5" title="km" />
+              </div>
+              <div class="ai-row">
+                <button type="button" class="btn btn-primary" id="aiFindBtn"></button>
+                <button type="button" class="btn btn-ghost" id="aiCheckBtn"></button>
+                <button type="button" class="btn btn-ghost" id="aiLocBtn"></button>
+              </div>
+              <div id="aiStatus" class="ai-status"></div>
+            </div>
+          </div>
+
+          <!-- Canlı Nəticə Paneli -->
+          <div class="live-results-panel">
+            <div id="aiProgress" class="ai-progress" hidden>
+              <div class="ai-spin"></div>
+              <div class="ai-prog-main">
+                <strong id="aiProgText"></strong>
+                <div class="ai-steps"><span id="aiStep1"></span><span id="aiStep2"></span></div>
+                <div class="ai-bar"><i></i></div>
+              </div>
+            </div>
+            <div class="live-score-banner">
+              <div class="score-info">
+                <span class="score-title" data-i18n="liveMatchHeader">Canlı Uyğunluq Nəticəsi</span>
+                <span id="liveMatchCount" class="score-count">4 büdcənizə uyğun təklif tapıldı</span>
+              </div>
+              <div class="score-gauge-wrap">
+                <div class="gauge-label">
+                  <span data-i18n="liveMatchScore">Uyğunluq Reytinqi</span>
+                  <strong id="liveMatchScore">98%</strong>
+                </div>
+                <div class="gauge-track">
+                  <div id="liveMatchGauge" class="gauge-bar" style="width: 98%;"></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Canlı Ağıllı Tövsiyə Zolağı -->
+            <div id="liveMatchTip" class="live-tip-box"></div>
+
+            <!-- Tapılan Turların Sürətli Kartları -->
+            <div id="liveMatches" class="live-matches-grid">
+              <!-- JS ilə doldurulur -->
+            </div>
+            <div class="ai-row" id="aiRouteRow" hidden>
+              <select id="aiMode"></select>
+              <button type="button" class="btn btn-primary" id="aiRouteBtn"></button>
+            </div>
+            <div id="aiRoute" class="ai-route"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- POPULYAR RAYONLAR VƏ BÖLGƏLƏR (REGIONS SHOWCASE) -->
+    <section id="regions" class="regions-section">
+      <div class="container">
+        <div class="section-head">
+          <div class="pill-label">📍 Rayon Seçimi</div>
+          <h2 data-i18n="regionSectionTitle">Populyar Səyahət Bölgələri</h2>
+          <p data-i18n="regionSectionSubtitle">Azərbaycanın füsunkar güşələrindən birini seçin və turlara baxın</p>
+        </div>
+        <div id="regionGrid" class="region-grid">
+          <!-- JS tərəfindən REGIONS_DATA əsasında doldurulur -->
+        </div>
+      </div>
+    </section>
+
+    <section id="tips" class="tips-section">
+      <div class="container">
+        <div class="section-head text-center">
+          <div class="pill-label">💡 Ekspert Tövsiyələri</div>
+          <h2 data-i18n="tipsSectionTitle">Səyahətçilər Üçün Tövsiyələr</h2>
+          <p data-i18n="tipsSectionSubtitle">Bələdçilərimizdən rayonlara getməzdən öncə bilməli olduğunuz qızıl qaydalar</p>
+        </div>
+
+        <div class="tips-grid">
+          <div class="tip-card">
+            <div class="tip-icon">🎒</div>
+            <h4 data-i18n="tip1Title">Şahdağ və Quba üçün nə götürməli?</h4>
+            <p data-i18n="tip1Desc">Dağ havası qəfil dəyişə bilər. Su keçirməyən isti gödəkçə, relyefli ayaqqabı və şəxsiyyət vəsiqəsi mütləqdir.</p>
+            <span class="tip-badge">Dağ Qaydaları</span>
+          </div>
+
+          <div class="tip-card">
+            <div class="tip-icon">🍲</div>
+            <h4 data-i18n="tip2Title">Şəki və Qəbələ Qastronomiyası</h4>
+            <p data-i18n="tip2Desc">Şəkidə gil qabda bişən Pitini və məşhur Şəki halvasını, Qəbələdə isə təndir küküsünü dadmadan qayıtmayın.</p>
+            <span class="tip-badge">Dad Xəritəsi</span>
+          </div>
+
+          <div class="tip-card">
+            <div class="tip-icon">🏞️</div>
+            <h4 data-i18n="tip3Title">Milli Parklar & Giriş Qaydaları</h4>
+            <p data-i18n="tip3Desc">Göy-göl və Şahdağ Milli Parkına giriş üçün 2 AZN ekoloji rüsum ödənilir (tur paketlərimizdə bu qiymətə daxildir).</p>
+            <span class="tip-badge">Ekoloji Rəsmiyyət</span>
+          </div>
+
+          <div class="tip-card">
+            <div class="tip-icon">📸</div>
+            <h4 data-i18n="tip4Title">Qobustan & Palçıq Vulkanları</h4>
+            <p data-i18n="tip4Desc">Ən yaxşı foto çəkiliş saatları səhər 09:00-11:00 arasıdır. Qobustan muzeyi giriş biletləri tələbələrə 50% endirimlidir.</p>
+            <span class="tip-badge">Foto & Çəkiliş</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FƏRDİ SƏYAHƏT XƏRC KALKULYATORU (CUSTOM TRIP CALCULATOR) -->
+    <section id="calculator" class="calc-section">
+      <div class="container">
+        <div class="calc-box">
+          <div class="calc-header">
+            <div class="pill-label">🧮 Xərc Kalkulyatoru</div>
+            <h2 data-i18n="calcTitle">Fərdi Səyahət Xərc Kalkulyatoru</h2>
+            <p data-i18n="calcSubtitle">Öz xüsusi qrupunuz və ya ailəniz üçün büdcəni əvvəlcədən dəqiq hesablayın</p>
+          </div>
+
+          <div class="calc-body-grid">
+            <div class="calc-inputs">
+              <!-- Passengers -->
+              <div class="cx-block">
+                <div class="cx-label" data-ct="persons">Sərnişin sayı</div>
+                <div class="cx-stepper">
+                  <button type="button" class="cx-step" data-step="-1" aria-label="-">−</button>
+                  <input type="number" id="calcPersons" min="1" max="40" value="4" />
+                  <button type="button" class="cx-step" data-step="1" aria-label="+">+</button>
+                  <input type="range" id="calcPersonsRange" min="1" max="40" value="4" class="custom-range" />
+                </div>
+              </div>
+
+              <!-- Days -->
+              <div class="cx-block">
+                <div class="cx-label" data-ct="days">Gün sayı</div>
+                <input type="hidden" id="calcDays" value="1" />
+                <div class="cx-days" id="calcDayBtns"></div>
+              </div>
+
+              <!-- Transport -->
+              <div class="cx-block">
+                <div class="cx-label" data-ct="transport">Nəqliyyat</div>
+                <input type="hidden" id="calcTransport" value="sprinter" />
+                <div class="cx-cards" id="calcTransportCards"></div>
+                <div class="cx-note" id="calcCapNote"></div>
+              </div>
+
+              <!-- Meal -->
+              <div class="cx-block">
+                <div class="cx-label" data-ct="meal">Qidalanma</div>
+                <input type="hidden" id="calcMeal" value="standard" />
+                <div class="cx-cards" id="calcMealCards"></div>
+              </div>
+
+              <!-- Extras -->
+              <div class="cx-block">
+                <div class="cx-label" data-ct="extras">Əlavə xidmətlər</div>
+                <div class="calc-checkbox-group">
+                  <label class="custom-check">
+                    <input type="checkbox" id="calcGuide" checked />
+                    <span data-ct="guide">Peşəkar bələdçi</span>
+                  </label>
+                  <label class="custom-check">
+                    <input type="checkbox" id="calcInsurance" checked />
+                    <span data-ct="insurance">Səyahət sığortası</span>
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            <!-- Result -->
+            <div class="calc-result-card">
+              <span class="calc-result-tag" data-ct="live">CANLI HESABLAMA</span>
+              <div class="calc-total-box">
+                <span class="total-label" data-ct="total">Təxmini ümumi xərc</span>
+                <span class="total-price" id="calcTotalVal">262 ₼</span>
+                <span class="cx-summary" id="calcSummary"></span>
+              </div>
+              <div class="cx-breakdown" id="calcBreakdown"></div>
+              <div class="calc-per-person-box">
+                <span class="per-label" data-ct="perPerson">Nəfər başına</span>
+                <strong id="calcPerPersonVal">66 ₼</strong>
+              </div>
+              <div class="calc-per-person-box" id="calcPerDayRow" hidden>
+                <span class="per-label" data-ct="perDay">Nəfər / gün</span>
+                <strong id="calcPerDayVal">0 ₼</strong>
+              </div>
+              <div class="cx-tip" id="calcTip" hidden></div>
+              <p class="calc-disclaimer" data-ct="disclaimer"></p>
+              <a href="#liveCheck" class="btn btn-primary btn-block" id="calcFindBtn"></a>
+              <button type="button" class="cx-copy" id="calcCopyBtn"></button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- MÜŞTƏRİ RƏYLƏRİ (TESTIMONIALS) -->
+    <section class="reviews-section">
+      <div class="container">
+        <div class="section-head text-center">
+          <div class="pill-label">⭐ Həqiqi Rəylər</div>
+          <h2 data-i18n="reviewsTitle">Müştəri Rəyləri</h2>
+          <p data-i18n="reviewsSubtitle">Bizimlə səyahət edən 10,000+ bəxtiyar turistin fikirləri</p>
+        </div>
+
+        <div class="reviews-grid">
+          <div class="review-card">
+            <div class="review-user">
+              <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=120&q=80" alt="Aysel" class="user-avatar" />
+              <div>
+                <h5>Aysel Məmmədova</h5>
+                <span>Fotoqraf & Səyyah</span>
+              </div>
+            </div>
+            <div class="review-stars">★★★★★</div>
+            <p>“Canlı yoxlama funksiyası möhtəşəmdir! 50 AZN büdcə qoydum və dərhal Xınalıq turu çıxdı. Hər şey saatı-saatına dəqiq təşkil olunmuşdu.”</p>
+            <small class="review-tour">Tur: Xınalıq Kəndi Dağ Macərası</small>
+          </div>
+
+          <div class="review-card">
+            <div class="review-user">
+              <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=120&q=80" alt="Rəşad" class="user-avatar" />
+              <div>
+                <h5>Rəşad Quliyev</h5>
+                <span>Ailəvi səyahətçi</span>
+              </div>
+            </div>
+            <div class="review-stars">★★★★★</div>
+            <p>“Uşaqlarla birlikdə getdik. Giriş biletlərinin qiymətə daxil olması və kanat növbəsində gözləməməyimiz böyük üstünlük oldu.”</p>
+            <small class="review-tour">Tur: Qəbələ Tufandağ & Nohurgöl</small>
+          </div>
+
+          <div class="review-card">
+            <div class="review-user">
+              <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=120&q=80" alt="Elena" class="user-avatar" />
+              <div>
+                <h5>Elena Smirnova</h5>
+                <span>Tourist from St. Petersburg</span>
+              </div>
+            </div>
+            <div class="review-stars">★★★★★</div>
+            <p>“Прекрасный сервис и очень удобный сайт! Выбрали русский язык, моментально проверили свободные места и получили онлайн ваучер.”</p>
+            <small class="review-tour">Тур: Шеки и Дворец Ханов</small>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- REZERVLƏRİM (MY BOOKINGS) -->
+    <section id="bookings" class="bookings-section">
+      <div class="container">
+        <div class="section-head">
+          <div class="pill-label">🎫 Şəxsi Kabinet</div>
+          <h2 data-i18n="bookingsTitle">Mənim Rezervlərim</h2>
+        </div>
+        <div id="bookingList" class="booking-list-container">
+          <!-- JS tərəfindən Store.all() əsasında render edilir -->
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- SAYTIN AYAQI (FOOTER) -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-col brand-col">
+          <a class="logo" href="#top">
+            <span class="logo-mark">
+              <svg viewBox="0 0 32 32" width="20" height="20" fill="none">
+                <path d="M16 2L3 27H29L16 2Z" fill="currentColor"/>
+                <path d="M16 11L9 24H23L16 11Z" fill="#fff" opacity="0.9"/>
+              </svg>
+            </span>
+            <span class="logo-text">Tour<span>Check</span></span>
+          </a>
+          <p class="footer-about" data-i18n="footerDesc">
+            Azərbaycanın bütün güşələrinə peşəkar, etibarlı və komfortlu turlar. Canlı bilet yoxlaması ilə vaxtınıza qənaət edin.
+          </p>
+          <div class="footer-badges">
+            <span class="ssl-badge">🔒 256-bit Təhlükəsiz Rezervasiya</span>
+          </div>
+        </div>
+
+        <div class="footer-col">
+          <h4 data-i18n="footerLinks">Faydalı Keçidlər</h4>
+          <ul>
+            <li><a href="#liveCheck">Canlı Büdcə Yoxlama</a></li>
+            <li><a href="#regions">Bölgələr Xəritəsi</a></li>
+            <li><a href="#calculator">Xərc Kalkulyatoru</a></li>
+            <li><a href="#tips">Səyahət Qaydaları</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h4 data-i18n="footerRegions">Top Bölgələr</h4>
+          <ul>
+            <li><a href="#liveCheck">Quba & Xınalıq</a></li>
+            <li><a href="#liveCheck">Qusar & Şahdağ</a></li>
+            <li><a href="#liveCheck">Qəbələ & Tufandağ</a></li>
+            <li><a href="#liveCheck">Şəki & Kiş Məbədi</a></li>
+            <li><a href="#liveCheck">Şuşa & Qarabağ</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h4 data-i18n="footerContact">Əlaqə & Dəstək</h4>
+          <p>📍 Bakı şəhəri, Nizami küç. 142</p>
+          <p>📞 Əlaqə: +994 (12) 555-88-99</p>
+          <p>💬 WhatsApp: +994 (50) 700-11-22</p>
+          <p>✉️ info@tourcheck.az</p>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <div>© <span id="year">2026</span> TourCheck. <span data-i18n="footerCopyright">Bütün hüquqlar qorunur. TourCheck platforması.</span></div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ==========================================================================
+       MODALLAR VƏ PƏNCƏRƏLƏR
+       ========================================================================== -->
+
+  <!-- 1. Tur Haqqında Ətraflı Məlumat Modalı (Tour Detail Modal) -->
+  <div id="tourDetailModal" class="modal-overlay" hidden role="dialog" aria-modal="true" aria-labelledby="detailModalTitle">
+    <div class="modal-card modal-lg">
+      <button class="modal-close-btn" aria-label="Bağla">✕</button>
+      
+      <div id="detailModalHero" class="modal-hero-banner">
+        <div class="modal-hero-overlay"></div>
+        <div class="modal-hero-info">
+          <div class="tags-group">
+            <span id="detailModalCity" class="badge badge-city"></span>
+            <span id="detailModalCategory" class="badge badge-cat"></span>
+          </div>
+          <h2 id="detailModalTitle"></h2>
+          <div class="modal-hero-sub">
+            <span id="detailModalRating" class="rating-text"></span>
+            <span id="detailModalPrice" class="price-text"></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tab Düymələri -->
+      <div class="modal-tabs">
+        <button type="button" class="detail-tab-btn active" data-target="tabOverviewPane" data-i18n="tabOverview">İcmal</button>
+        <button type="button" class="detail-tab-btn" data-target="tabItineraryPane" data-i18n="tabItinerary">Marşrut Proqramı</button>
+        <button type="button" class="detail-tab-btn" data-target="tabIncludedPane" data-i18n="tabIncluded">Nələr Daxildir</button>
+        <button type="button" class="detail-tab-btn" data-target="tabWeatherPane" data-i18n="tabWeather">Hava Durumu</button>
+      </div>
+
+      <!-- Tab Panelləri -->
+      <div class="modal-tab-body">
+        <!-- İcmal -->
+        <div id="tabOverviewPane" class="detail-tab-pane active">
+          <p id="detailModalDesc" class="detail-desc-text"></p>
+          <div class="detail-quick-meta">
+            <div class="detail-meta-box">
+              <span class="icon">📍</span>
+              <div>
+                <strong>Görüş Yeri</strong>
+                <p id="detailModalMeeting"></p>
+              </div>
+            </div>
+            <div class="detail-meta-box">
+              <span class="icon">⏱</span>
+              <div>
+                <strong>Müddət</strong>
+                <p id="detailModalDuration"></p>
+              </div>
+            </div>
+            <div class="detail-meta-box">
+              <span class="icon">🎟</span>
+              <div>
+                <strong>Giriş və Biletlər</strong>
+                <p id="detailModalEntrance"></p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Marşrut -->
+        <div id="tabItineraryPane" class="detail-tab-pane">
+          <div id="detailModalItinerary" class="itinerary-timeline"></div>
+        </div>
+
+        <!-- Daxildir / Daxil Deyil -->
+        <div id="tabIncludedPane" class="detail-tab-pane">
+          <div id="detailModalIncluded" class="inc-exc-grid"></div>
+        </div>
+
+        <!-- Hava və Geyim -->
+        <div id="tabWeatherPane" class="detail-tab-pane">
+          <div id="detailModalWeather"></div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" id="detailModalBookBtn" class="btn btn-primary btn-block">
+          ⚡ Bu Turu Rezerv Et
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. Rezervasiya Modalı (Booking Modal) -->
+  <div id="bookingModal" class="modal-overlay" hidden role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal-card modal-md">
+      <button class="modal-close-btn" aria-label="Bağla">✕</button>
+      
+      <div class="booking-modal-head">
+        <span class="pill-badge">BİLET REZERVİ</span>
+        <h3 id="modalTitle" data-i18n="modalBookTitle">Tur Rezervasiyası</h3>
+        <h4 id="bookModalTourName" class="book-tour-title"></h4>
+        <p id="bookModalMeta" class="book-tour-meta"></p>
+        <p id="bookModalAvailable" class="book-avail-status"></p>
+      </div>
+
+      <form id="bookForm" class="booking-form" autocomplete="off">
+        <div class="form-group">
+          <label for="bName" data-i18n="nameLabel">Ad və Soyadınız</label>
+          <input type="text" id="bName" placeholder="Məs: Əli Əliyev" required minlength="3" />
+        </div>
+
+        <div class="form-group">
+          <label for="bPhone" data-i18n="phoneLabel">Əlaqə Nömrəsi</label>
+          <input type="tel" id="bPhone" placeholder="+994 50 123 45 67" required pattern="[+0-9 ()-]{7,20}" />
+        </div>
+
+        <div class="form-group">
+          <label for="bSeats" data-i18n="seatsLabel">Bilet Sayı</label>
+          <input type="number" id="bSeats" min="1" max="20" value="1" required />
+        </div>
+
+        <div class="form-group" id="bExtWhen" hidden>
+          <label for="bDate">📅</label>
+          <div class="ai-row"><input type="date" id="bDate" /><input type="time" id="bTime" value="19:00" /></div>
+        </div>
+
+        <div class="booking-total-banner">
+          <span data-i18n="totalLabel">Ödəniləcək Məbləğ:</span>
+          <strong id="bTotal">0 ₼</strong>
+        </div>
+
+        <p id="bError" class="form-error-alert" hidden></p>
+
+        <button type="submit" class="btn btn-primary btn-block" data-i18n="btnConfirmBooking">
+          Rezervasiyanı Təsdiqlə
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- 3. Rəsmi Elektron Bilet / Voucher Modalı (Ticket Pass Modal) -->
+  <div id="ticketPassModal" class="modal-overlay" hidden role="dialog" aria-modal="true">
+    <div class="modal-card modal-ticket">
+      <button class="modal-close-btn" aria-label="Bağla">✕</button>
+      
+      <div class="ticket-wrapper">
+        <div class="ticket-header">
+          <div class="ticket-brand">TourCheck Pass</div>
+          <div class="ticket-status-badge" data-i18n="ticketStatus">TƏSDİQLƏNDİ</div>
+        </div>
+
+        <div class="ticket-body">
+          <div class="ticket-field full">
+            <span class="label" data-i18n="ticketTour">Tur Adı</span>
+            <strong id="ticketTourName" class="val-tour"></strong>
+          </div>
+
+          <div class="ticket-row-2">
+            <div class="ticket-field">
+              <span class="label" data-i18n="ticketGuest">Sərnişin</span>
+              <strong id="ticketGuestName"></strong>
+            </div>
+            <div class="ticket-field">
+              <span class="label">Telefon</span>
+              <span id="ticketPhone"></span>
+            </div>
+          </div>
+
+          <div class="ticket-row-2">
+            <div class="ticket-field">
+              <span class="label" data-i18n="ticketDateTime">Tarix və Saat</span>
+              <strong id="ticketDateTime"></strong>
+            </div>
+            <div class="ticket-field">
+              <span class="label" data-i18n="ticketSeats">Yer Sayı</span>
+              <strong id="ticketSeats"></strong>
+            </div>
+          </div>
+
+          <div class="ticket-field full">
+            <span class="label" data-i18n="ticketMeeting">Toplanış Yeri</span>
+            <span id="ticketPlace"></span>
+          </div>
+
+          <div class="ticket-row-2 ticket-total-row">
+            <div class="ticket-field">
+              <span class="label" data-i18n="ticketCode">Bilet Kodu</span>
+              <span id="ticketCode" class="barcode-code"></span>
+            </div>
+            <div class="ticket-field text-right">
+              <span class="label" data-i18n="ticketAmount">Ödəniş Məbləği</span>
+              <strong id="ticketTotal" class="total-big"></strong>
+            </div>
+          </div>
+
+          <!-- Barkod və QR Simulyasiyası -->
+          <div class="ticket-barcode-wrap">
+            <div class="fake-barcode">|||| | |||||| || | |||| |||||| || ||| |||||||</div>
+            <p class="ticket-notice" data-i18n="ticketNotice">Görüş yerinə yola düşmə vaxtından ən azı 15 dəqiqə öncə yaxınlaşmağınız xahiş olunur.</p>
+          </div>
+        </div>
+
+        <div class="ticket-footer-actions">
+          <button type="button" class="btn btn-outline" id="printTicketBtn" data-i18n="btnPrint">🖨️ Çap Et / Saxla</button>
+          <button type="button" class="btn btn-primary" onclick="closeAllModals()" data-i18n="btnClose">Bağla</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4. Sevimlilər Siyirməsi (Wishlist Drawer) -->
+  <aside id="wishlistDrawer" class="drawer-panel" aria-label="Sevimlilər paneli">
+    <div class="drawer-header">
+      <h3 data-i18n="navWishlist">Sevimlilər</h3>
+      <button type="button" id="wishlistDrawerClose" class="drawer-close-btn">✕</button>
+    </div>
+    <div id="wishlistDrawerList" class="drawer-content">
+      <!-- JS ilə render edilir -->
+    </div>
+  </aside>
+
+  <!-- Bildiriş Mesajı (Toast) -->
+  <div id="toast" class="toast-notification" hidden role="status"></div>
+
+  <!-- Skriptlər -->
+  <script src="js/translations.js"></script>
+  <script src="js/regions-data.js"></script>
+  <script src="js/helpers.js"></script>
+  <script src="js/storage.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/backend-bridge.js"></script>
+  <script src="js/region-page.js"></script>
+  <script type="module" src="js/firebase.js"></script>
+</body>
+</html>

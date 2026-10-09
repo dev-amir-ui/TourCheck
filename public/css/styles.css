@@ -1,0 +1,2585 @@
+/* ==========================================================================
+   TourCheck — Müasir, Təkmil Səyahət & Tur Dizayn Sistemi
+   ========================================================================== */
+
+:root {
+  /* Əsas Rəng Palitrası (Light Theme) */
+  --primary: #0f766e;
+  --primary-light: #14b8a6;
+  --primary-dark: #115e59;
+  --primary-bg: #f0fdfa;
+  --accent: #f59e0b;
+  --accent-hover: #d97706;
+  --accent-light: #fef3c7;
+  
+  --bg-main: #f8fafc;
+  --bg-surface: #ffffff;
+  --bg-subtle: #f1f5f9;
+  
+  --text-primary: #0f172a;
+  --text-secondary: #475569;
+  --text-muted: #64748b;
+  --text-inverse: #ffffff;
+
+  --border-light: #e2e8f0;
+  --border-focus: #0d9488;
+  
+  --ok: #10b981;
+  --ok-bg: #ecfdf5;
+  --warn: #f59e0b;
+  --warn-bg: #fffbeb;
+  --bad: #ef4444;
+  --bad-bg: #fef2f2;
+
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 18px;
+  --radius-xl: 24px;
+  --radius-full: 9999px;
+
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 12px -2px rgba(15, 23, 42, 0.08);
+  --shadow-lg: 0 12px 28px -6px rgba(15, 23, 42, 0.12);
+  --shadow-xl: 0 20px 40px -10px rgba(15, 23, 42, 0.18);
+  --glass-bg: rgba(255, 255, 255, 0.85);
+
+  --transition-fast: 0.18s ease;
+  --transition-normal: 0.28s ease;
+}
+
+[data-theme="dark"] {
+  --primary: #14b8a6;
+  --primary-light: #2dd4bf;
+  --primary-dark: #0f766e;
+  --primary-bg: #132e2b;
+  --accent: #fbbf24;
+  --accent-hover: #f59e0b;
+  --accent-light: #3a2e15;
+
+  --bg-main: #0b1120;
+  --bg-surface: #111827;
+  --bg-subtle: #1e293b;
+
+  --text-primary: #f8fafc;
+  --text-secondary: #cbd5e1;
+  --text-muted: #94a3b8;
+  --text-inverse: #0f172a;
+
+  --border-light: #334155;
+  --border-focus: #14b8a6;
+
+  --ok-bg: #064e3b;
+  --warn-bg: #451a03;
+  --bad-bg: #450a0a;
+
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 14px -2px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 12px 30px -6px rgba(0, 0, 0, 0.55);
+  --shadow-xl: 0 20px 45px -10px rgba(0, 0, 0, 0.7);
+  --glass-bg: rgba(17, 24, 39, 0.88);
+}
+
+/* ==========================================================================
+   Əsas Qaydalar & Tipografiya
+   ========================================================================== */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+  font-size: 16px;
+}
+
+body {
+  font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  background-color: var(--bg-main);
+  color: var(--text-primary);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  transition: background-color var(--transition-normal), color var(--transition-normal);
+}
+
+.container {
+  width: min(1200px, 92%);
+  margin-inline: auto;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button, input, select, textarea {
+  font: inherit;
+}
+
+[hidden] {
+  display: none !important;
+}
+
+.text-center { text-align: center; }
+
+/* ==========================================================================
+   Yuxarı Zolaq (Top Notification Bar)
+   ========================================================================== */
+.top-bar {
+  background: linear-gradient(90deg, #0d9488, #0f766e);
+  color: #fff;
+  font-size: 0.82rem;
+  padding: 6px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.top-bar-inner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.top-bar-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.pulse-dot {
+  width: 8px;
+  height: 8px;
+  background-color: #4ade80;
+  border-radius: 50%;
+  box-shadow: 0 0 0 0 rgba(74, 222, 128, 0.7);
+  animation: pulse 1.8s infinite;
+}
+
+@keyframes pulse {
+  0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(74, 222, 128, 0.7); }
+  70% { transform: scale(1); box-shadow: 0 0 0 7px rgba(74, 222, 128, 0); }
+  100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(74, 222, 128, 0); }
+}
+
+.top-bar-right {
+  display: flex;
+  gap: 16px;
+  opacity: 0.95;
+}
+
+/* ==========================================================================
+   Header (Sayt Başlığı)
+   ========================================================================== */
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: var(--glass-bg);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-bottom: 1px solid var(--border-light);
+  transition: all var(--transition-fast);
+}
+
+.header-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 72px;
+  gap: 20px;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 800;
+  font-size: 1.35rem;
+  color: var(--primary);
+  letter-spacing: -0.5px;
+}
+
+.logo-mark {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-md);
+  background: var(--primary-bg);
+  color: var(--primary);
+  border: 1px solid var(--border-light);
+}
+
+.logo-text span {
+  color: var(--accent);
+}
+
+.nav-menu {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+.nav-link {
+  font-weight: 600;
+  font-size: 0.92rem;
+  color: var(--text-secondary);
+  transition: color var(--transition-fast);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  position: relative;
+}
+
+.nav-link:hover {
+  color: var(--primary);
+}
+
+.nav-link.nav-live {
+  color: var(--primary);
+  background: var(--primary-bg);
+  padding: 6px 14px;
+  border-radius: var(--radius-full);
+}
+
+.nav-live-icon {
+  animation: bounce 1.8s infinite;
+}
+
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-3px); }
+}
+
+.badge-pill {
+  background: var(--accent);
+  color: #fff;
+  border-radius: var(--radius-full);
+  padding: 1px 7px;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* Dil Seçimi (Language Switcher) */
+.lang-switcher {
+  display: flex;
+  background: var(--bg-subtle);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-full);
+  padding: 3px;
+}
+
+.lang-btn {
+  background: transparent;
+  border: 0;
+  padding: 4px 10px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.lang-btn:hover {
+  color: var(--text-primary);
+}
+
+.lang-btn.active {
+  background: var(--primary);
+  color: #fff;
+  box-shadow: var(--shadow-sm);
+}
+
+/* İkon Düymələri */
+.icon-btn {
+  background: var(--bg-subtle);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-full);
+  width: 40px;
+  height: 40px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  position: relative;
+  transition: all var(--transition-fast);
+}
+
+.icon-btn:hover {
+  border-color: var(--primary);
+  transform: translateY(-1px);
+}
+
+.badge-count {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  background: var(--bad);
+  color: #fff;
+  font-size: 0.7rem;
+  font-weight: 700;
+  border-radius: var(--radius-full);
+  min-width: 18px;
+  height: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 4px;
+}
+
+.mobile-menu-btn {
+  display: none;
+  background: transparent;
+  border: 0;
+  width: 32px;
+  height: 24px;
+  flex-direction: column;
+  justify-content: space-between;
+  cursor: pointer;
+}
+
+.mobile-menu-btn span {
+  display: block;
+  height: 3px;
+  background: var(--text-primary);
+  border-radius: 2px;
+  transition: 0.2s;
+}
+
+/* ==========================================================================
+   Hero Bölməsi
+   ========================================================================== */
+.hero-section {
+  position: relative;
+  background: linear-gradient(135deg, #094e48 0%, #0f766e 50%, #155e75 100%);
+  color: #fff;
+  padding: 68px 0 84px;
+  overflow: hidden;
+}
+
+.hero-bg-overlay {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 80% 20%, rgba(20, 184, 166, 0.25) 0%, transparent 60%);
+  pointer-events: none;
+}
+
+.hero-container {
+  position: relative;
+  z-index: 2;
+}
+
+.hero-content {
+  max-width: 780px;
+}
+
+.hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.14);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  padding: 6px 16px;
+  border-radius: var(--radius-full);
+  font-size: 0.85rem;
+  font-weight: 600;
+  margin-bottom: 20px;
+}
+
+.hero-title {
+  font-size: clamp(2rem, 4.2vw, 3.4rem);
+  font-weight: 800;
+  line-height: 1.15;
+  letter-spacing: -1px;
+  margin-bottom: 18px;
+}
+
+.hero-subtitle {
+  font-size: clamp(1rem, 1.8vw, 1.25rem);
+  opacity: 0.92;
+  line-height: 1.6;
+  margin-bottom: 32px;
+  max-width: 650px;
+}
+
+.hero-actions {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 48px;
+}
+
+.btn-hero {
+  padding: 14px 28px;
+  font-size: 1rem;
+  border-radius: var(--radius-md);
+  font-weight: 700;
+}
+
+.btn-glass {
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(8px);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+}
+
+.btn-glass:hover {
+  background: rgba(255, 255, 255, 0.25);
+}
+
+.hero-stats {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  background: rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  padding: 16px 28px;
+  border-radius: var(--radius-lg);
+  max-width: fit-content;
+}
+
+.stat-item {
+  display: flex;
+  flex-direction: column;
+}
+
+.stat-number {
+  font-size: 1.45rem;
+  font-weight: 800;
+  color: var(--accent);
+}
+
+.stat-label {
+  font-size: 0.78rem;
+  opacity: 0.88;
+}
+
+.stat-divider {
+  width: 1px;
+  height: 36px;
+  background: rgba(255, 255, 255, 0.2);
+}
+
+/* ==========================================================================
+   Bölmə Başlıqları (Section Headers)
+   ========================================================================== */
+.section-head {
+  margin-bottom: 32px;
+}
+
+.pill-label {
+  display: inline-block;
+  background: var(--primary-bg);
+  color: var(--primary);
+  font-size: 0.8rem;
+  font-weight: 700;
+  padding: 4px 12px;
+  border-radius: var(--radius-full);
+  margin-bottom: 10px;
+  border: 1px solid var(--border-light);
+}
+
+.section-head h2 {
+  font-size: clamp(1.6rem, 3vw, 2.2rem);
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  margin-bottom: 8px;
+}
+
+.section-head p {
+  color: var(--text-secondary);
+  font-size: 1rem;
+}
+
+/* ==========================================================================
+   CANLI YOXLAMA (LIVE BUDGET & DESTINATION MATCHER)
+   ========================================================================== */
+.live-check-section {
+  margin-top: -36px;
+  position: relative;
+  z-index: 10;
+  padding-bottom: 48px;
+}
+
+.live-check-card {
+  background: var(--bg-surface);
+  border-radius: var(--radius-xl);
+  border: 1px solid var(--border-light);
+  box-shadow: var(--shadow-xl);
+  padding: 32px;
+  display: grid;
+  grid-template-columns: 1fr 1.3fr;
+  gap: 36px;
+}
+
+.live-check-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+.form-group-budget {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  background: var(--bg-subtle);
+  padding: 20px;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border-light);
+}
+
+.budget-label-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.budget-label-row label {
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: var(--text-primary);
+}
+
+.budget-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.budget-input-wrapper input {
+  width: 90px;
+  text-align: right;
+  padding: 6px 24px 6px 8px;
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: var(--primary);
+  border: 2px solid var(--border-light);
+  border-radius: var(--radius-md);
+  background: var(--bg-surface);
+}
+
+.budget-input-wrapper input:focus {
+  border-color: var(--primary);
+  outline: none;
+}
+
+.budget-input-wrapper .currency-sign {
+  position: absolute;
+  right: 10px;
+  font-weight: 800;
+  color: var(--primary);
+}
+
+/* Range Slider */
+.custom-range {
+  -webkit-appearance: none;
+  width: 100%;
+  height: 8px;
+  border-radius: 4px;
+  background: var(--border-light);
+  outline: none;
+  cursor: pointer;
+}
+
+.custom-range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--primary);
+  box-shadow: 0 0 0 4px rgba(15, 118, 110, 0.25);
+  cursor: pointer;
+  transition: transform var(--transition-fast);
+}
+
+.custom-range::-webkit-slider-thumb:hover {
+  transform: scale(1.15);
+}
+
+.budget-presets-row {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.budget-preset {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-light);
+  padding: 5px 12px;
+  border-radius: var(--radius-full);
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.budget-preset:hover {
+  border-color: var(--primary);
+  color: var(--primary);
+}
+
+.budget-preset.active {
+  background: var(--primary);
+  color: #fff;
+  border-color: var(--primary);
+}
+
+.live-filter-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr 0.7fr;
+  gap: 14px;
+}
+
+.filter-col {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.filter-col label {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--text-muted);
+}
+
+.filter-col select,
+.filter-col input {
+  padding: 10px 12px;
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-md);
+  background: var(--bg-surface);
+  color: var(--text-primary);
+  font-size: 0.9rem;
+  transition: border-color var(--transition-fast);
+}
+
+.filter-col select:focus,
+.filter-col input:focus {
+  border-color: var(--border-focus);
+  outline: none;
+}
+
+/* Canlı Nəticə Paneli */
+.live-results-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  background: var(--bg-subtle);
+  border-radius: var(--radius-lg);
+  padding: 22px;
+  border: 1px solid var(--border-light);
+}
+
+.live-score-banner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: var(--bg-surface);
+  padding: 16px 20px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-light);
+  gap: 16px;
+}
+
+.score-title {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  display: block;
+}
+
+.score-count {
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: var(--primary);
+}
+
+.score-gauge-wrap {
+  min-width: 140px;
+}
+
+.gauge-label {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.8rem;
+  margin-bottom: 4px;
+}
+
+.gauge-track {
+  width: 100%;
+  height: 8px;
+  background: var(--border-light);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.gauge-bar {
+  height: 100%;
+  background: linear-gradient(90deg, #10b981, #0f766e);
+  border-radius: 4px;
+  transition: width 0.4s ease;
+}
+
+.live-tip-box {
+  background: var(--warn-bg);
+  border: 1px solid rgba(245, 158, 11, 0.3);
+  color: var(--text-primary);
+  padding: 14px 18px;
+  border-radius: var(--radius-md);
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.group-calc-note {
+  display: block;
+  margin-top: 4px;
+  color: var(--text-muted);
+  font-size: 0.82rem;
+}
+
+.live-matches-grid {
+  display: grid;
+  gap: 12px;
+  overflow-y: auto;
+  max-height: 380px;
+  padding-right: 4px;
+}
+
+.live-card {
+  display: grid;
+  grid-template-columns: 110px 1fr;
+  background: var(--bg-surface);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-light);
+  overflow: hidden;
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.live-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.live-card-img {
+  background-size: cover;
+  background-position: center;
+  position: relative;
+  min-height: 100px;
+}
+
+.live-card-badge {
+  position: absolute;
+  top: 6px;
+  left: 6px;
+  background: rgba(0, 0, 0, 0.7);
+  color: #fff;
+  font-size: 0.68rem;
+  font-weight: 700;
+  padding: 2px 6px;
+  border-radius: var(--radius-sm);
+}
+
+.live-card-rating {
+  position: absolute;
+  bottom: 6px;
+  left: 6px;
+  background: var(--accent);
+  color: #fff;
+  font-size: 0.68rem;
+  font-weight: 700;
+  padding: 1px 6px;
+  border-radius: var(--radius-sm);
+}
+
+.live-card-body {
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 6px;
+}
+
+.live-card-body h4 {
+  font-size: 0.95rem;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.live-card-desc {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  line-height: 1.4;
+}
+
+.live-card-meta {
+  display: flex;
+  gap: 12px;
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+}
+
+.live-card-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 4px;
+  padding-top: 6px;
+  border-top: 1px solid var(--border-light);
+}
+
+.live-card-price strong {
+  font-size: 1.1rem;
+  color: var(--primary);
+}
+
+.savings-tag {
+  display: block;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--ok);
+}
+
+.savings-tag.exact-match {
+  color: var(--accent);
+}
+
+.live-card-actions {
+  display: flex;
+  gap: 6px;
+}
+
+.empty-live-box {
+  text-align: center;
+  padding: 32px 16px;
+  color: var(--text-muted);
+}
+
+.empty-icon {
+  font-size: 2.2rem;
+  margin-bottom: 8px;
+}
+
+/* ==========================================================================
+   POPULYAR RAYONLAR (REGIONS SHOWCASE)
+   ========================================================================== */
+.regions-section {
+  padding: 64px 0;
+}
+
+.region-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 20px;
+}
+
+.region-card {
+  background: var(--bg-surface);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border-light);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+  cursor: pointer;
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+  display: flex;
+  flex-direction: column;
+}
+
+.region-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
+}
+
+.region-card-media {
+  height: 160px;
+  background-size: cover;
+  background-position: center;
+  position: relative;
+  transition: transform 0.4s ease;
+}
+
+.region-card:hover .region-card-media {
+  transform: scale(1.03);
+}
+
+.region-card-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.65) 0%, transparent 70%);
+}
+
+.region-weather-badge {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: rgba(0, 0, 0, 0.65);
+  backdrop-filter: blur(4px);
+  color: #fff;
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: var(--radius-full);
+}
+
+.region-tag {
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+  background: var(--primary);
+  color: #fff;
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: var(--radius-sm);
+}
+
+.region-card-content {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  justify-content: space-between;
+}
+
+.region-card-content h3 {
+  font-size: 1.15rem;
+  font-weight: 800;
+  margin-bottom: 4px;
+}
+
+.region-card-content p {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  line-height: 1.45;
+  margin-bottom: 14px;
+}
+
+.region-card-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--primary);
+  border-top: 1px solid var(--border-light);
+  padding-top: 10px;
+}
+
+.region-arrow {
+  transition: transform var(--transition-fast);
+}
+
+.region-card:hover .region-arrow {
+  transform: translateX(4px);
+}
+
+/* ==========================================================================
+   TUR KATALOQU & FİLTRLƏMƏ (CATALOG SECTION)
+   ========================================================================== */
+.catalog-section {
+  padding: 64px 0;
+  background: var(--bg-subtle);
+}
+
+.catalog-filter-card {
+  background: var(--bg-surface);
+  border-radius: var(--radius-xl);
+  border: 1px solid var(--border-light);
+  box-shadow: var(--shadow-md);
+  padding: 24px;
+  margin-bottom: 24px;
+}
+
+.search-keyword-row {
+  margin-bottom: 18px;
+}
+
+.search-input-box {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.search-icon {
+  position: absolute;
+  left: 16px;
+  font-size: 1.1rem;
+  color: var(--text-muted);
+}
+
+.search-input-box input {
+  width: 100%;
+  padding: 14px 16px 14px 46px;
+  border: 2px solid var(--border-light);
+  border-radius: var(--radius-md);
+  background: var(--bg-main);
+  color: var(--text-primary);
+  font-size: 1rem;
+  transition: border-color var(--transition-fast);
+}
+
+.search-input-box input:focus {
+  border-color: var(--border-focus);
+  outline: none;
+  background: var(--bg-surface);
+}
+
+.filter-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+  gap: 14px;
+  margin-bottom: 18px;
+}
+
+.filter-grid label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--text-muted);
+}
+
+.filter-grid select,
+.filter-grid input {
+  padding: 10px 12px;
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-md);
+  background: var(--bg-surface);
+  color: var(--text-primary);
+  font-size: 0.88rem;
+}
+
+.filter-grid select:focus,
+.filter-grid input:focus {
+  border-color: var(--border-focus);
+  outline: none;
+}
+
+.filter-bottom-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+  padding-top: 14px;
+  border-top: 1px solid var(--border-light);
+}
+
+.filter-checkboxes {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.custom-check {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.86rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  cursor: pointer;
+}
+
+.custom-check input {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--primary);
+  cursor: pointer;
+}
+
+.filter-actions {
+  display: flex;
+  gap: 10px;
+}
+
+/* Kateqoriya Pilləri */
+.category-pills-bar {
+  display: flex;
+  gap: 10px;
+  overflow-x: auto;
+  padding-bottom: 8px;
+  margin-bottom: 24px;
+  scrollbar-width: thin;
+}
+
+.cat-pill {
+  white-space: nowrap;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-light);
+  padding: 8px 18px;
+  border-radius: var(--radius-full);
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.cat-pill:hover {
+  border-color: var(--primary);
+  color: var(--primary);
+}
+
+.cat-pill.active {
+  background: var(--primary);
+  color: #fff;
+  border-color: var(--primary);
+  box-shadow: var(--shadow-sm);
+}
+
+/* Nəticələr Başlığı */
+.results-header-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin-bottom: 20px;
+}
+
+.results-headline {
+  font-size: 1.35rem;
+  font-weight: 800;
+}
+
+.results-meta-info {
+  font-size: 0.88rem;
+  color: var(--text-muted);
+}
+
+.sort-selector-wrap {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.88rem;
+  font-weight: 600;
+}
+
+.sort-selector-wrap select {
+  padding: 6px 12px;
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-md);
+  background: var(--bg-surface);
+  color: var(--text-primary);
+}
+
+/* ==========================================================================
+   TUR KARTLARI (TOUR CARDS GRID)
+   ========================================================================== */
+.tour-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+  gap: 24px;
+}
+
+.tour-card {
+  background: var(--bg-surface);
+  border-radius: var(--radius-xl);
+  border: 1px solid var(--border-light);
+  box-shadow: var(--shadow-md);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.tour-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-xl);
+}
+
+.tour-card-image {
+  height: 220px;
+  background-size: cover;
+  background-position: center;
+  position: relative;
+  padding: 14px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.tour-card-badge-group {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.badge {
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: var(--radius-full);
+}
+
+.badge-city {
+  background: rgba(15, 23, 42, 0.82);
+  backdrop-filter: blur(4px);
+  color: #fff;
+}
+
+.badge-cat {
+  background: var(--primary);
+  color: #fff;
+}
+
+.badge-pop {
+  background: var(--accent);
+  color: #fff;
+}
+
+.wishlist-btn {
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(4px);
+  border: 0;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+  cursor: pointer;
+  box-shadow: var(--shadow-sm);
+  transition: transform var(--transition-fast);
+}
+
+.wishlist-btn:hover {
+  transform: scale(1.15);
+}
+
+.tour-card-content {
+  padding: 22px;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  gap: 14px;
+}
+
+.tour-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.tour-title-area h3 {
+  font-size: 1.18rem;
+  font-weight: 800;
+  line-height: 1.3;
+  margin-bottom: 4px;
+}
+
+.tour-rating {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.85rem;
+}
+
+.tour-rating .star {
+  color: #f59e0b;
+}
+
+.reviews-count {
+  color: var(--text-muted);
+}
+
+.tour-price-box {
+  text-align: right;
+  min-width: 80px;
+}
+
+.price-val {
+  display: block;
+  font-size: 1.45rem;
+  font-weight: 800;
+  color: var(--primary);
+  line-height: 1;
+}
+
+.price-sub {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+}
+
+.tour-desc {
+  font-size: 0.86rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.tour-highlights-chips {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.chip {
+  background: var(--bg-subtle);
+  border: 1px solid var(--border-light);
+  color: var(--text-secondary);
+  font-size: 0.72rem;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: var(--radius-sm);
+}
+
+.tour-meta-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 6px;
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+  background: var(--bg-subtle);
+  padding: 10px 12px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-light);
+}
+
+.meta-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+}
+
+/* Canlı Seanslar */
+.tour-slots-section {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.slots-label {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--text-muted);
+}
+
+.slots-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+  gap: 8px;
+}
+
+.slot-pill {
+  border: 1px solid var(--border-light);
+  background: var(--bg-main);
+  border-radius: var(--radius-md);
+  padding: 8px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  text-align: center;
+}
+
+.slot-time {
+  font-size: 1rem;
+  font-weight: 800;
+}
+
+.slot-badge {
+  font-size: 0.72rem;
+  font-weight: 700;
+}
+
+.slot-pill.ok .slot-badge { color: var(--ok); }
+.slot-pill.low .slot-badge { color: var(--warn); }
+.slot-pill.none .slot-badge { color: var(--bad); }
+
+.slot-btn {
+  margin-top: 4px;
+  background: var(--primary);
+  color: #fff;
+  border: 0;
+  padding: 4px 6px;
+  border-radius: var(--radius-sm);
+  font-size: 0.75rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: opacity var(--transition-fast);
+}
+
+.slot-btn:disabled {
+  background: var(--border-light);
+  color: var(--text-muted);
+  cursor: not-allowed;
+}
+
+.tour-card-bottom-actions {
+  display: grid;
+  grid-template-columns: 1fr 1.4fr;
+  gap: 10px;
+  margin-top: auto;
+  padding-top: 10px;
+}
+
+/* Boş Nəticə */
+.empty-state-card {
+  text-align: center;
+  background: var(--bg-surface);
+  border-radius: var(--radius-xl);
+  border: 1px dashed var(--border-light);
+  padding: 56px 20px;
+  margin-top: 20px;
+}
+
+.empty-illustration {
+  font-size: 3rem;
+  margin-bottom: 12px;
+}
+
+/* ==========================================================================
+   TÖVSİYƏLƏR (TRAVEL TIPS)
+   ========================================================================== */
+.tips-section {
+  padding: 64px 0;
+}
+
+.tips-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 20px;
+}
+
+.tip-card {
+  background: var(--bg-surface);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border-light);
+  padding: 24px;
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  transition: transform var(--transition-fast);
+}
+
+.tip-card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-md);
+}
+
+.tip-icon {
+  font-size: 2.2rem;
+  margin-bottom: 14px;
+}
+
+.tip-card h4 {
+  font-size: 1.1rem;
+  font-weight: 800;
+  margin-bottom: 8px;
+}
+
+.tip-card p {
+  font-size: 0.88rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
+  margin-bottom: 18px;
+}
+
+.tip-badge {
+  margin-top: auto;
+  align-self: flex-start;
+  font-size: 0.72rem;
+  font-weight: 700;
+  background: var(--primary-bg);
+  color: var(--primary);
+  padding: 3px 10px;
+  border-radius: var(--radius-full);
+}
+
+/* ==========================================================================
+   XƏRC KALKULYATORU (CUSTOM TRIP CALCULATOR)
+   ========================================================================== */
+.calc-section {
+  padding: 64px 0;
+  background: var(--bg-subtle);
+}
+
+.calc-box {
+  background: var(--bg-surface);
+  border-radius: var(--radius-xl);
+  border: 1px solid var(--border-light);
+  box-shadow: var(--shadow-xl);
+  padding: 36px;
+}
+
+.calc-header {
+  margin-bottom: 28px;
+}
+
+.calc-body-grid {
+  display: grid;
+  grid-template-columns: 1.3fr 1fr;
+  gap: 36px;
+}
+
+.calc-inputs {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1.4fr;
+  gap: 16px;
+}
+
+.form-row label,
+.calc-inputs label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--text-muted);
+}
+
+.calc-inputs input,
+.calc-inputs select {
+  padding: 10px 12px;
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-md);
+  background: var(--bg-surface);
+  color: var(--text-primary);
+}
+
+.calc-checkbox-group {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  background: var(--bg-subtle);
+  padding: 14px;
+  border-radius: var(--radius-md);
+}
+
+.calc-result-card {
+  background: linear-gradient(135deg, #094e48, #0f766e);
+  color: #fff;
+  border-radius: var(--radius-lg);
+  padding: 28px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.calc-result-tag {
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 1px;
+  background: rgba(255, 255, 255, 0.18);
+  padding: 3px 8px;
+  border-radius: var(--radius-sm);
+  width: fit-content;
+}
+
+.calc-total-box .total-label {
+  font-size: 0.9rem;
+  opacity: 0.9;
+  display: block;
+}
+
+.calc-total-box .total-price {
+  font-size: 2.4rem;
+  font-weight: 800;
+  color: var(--accent);
+}
+
+.calc-per-person-box {
+  background: rgba(0, 0, 0, 0.2);
+  padding: 10px 14px;
+  border-radius: var(--radius-md);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.calc-disclaimer {
+  font-size: 0.78rem;
+  opacity: 0.82;
+}
+
+/* ==========================================================================
+   RƏYLƏR (TESTIMONIALS)
+   ========================================================================== */
+.reviews-section {
+  padding: 64px 0;
+}
+
+.reviews-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+}
+
+.review-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.review-user {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.user-avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.review-user h5 {
+  font-size: 0.95rem;
+  font-weight: 700;
+}
+
+.review-user span {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.review-stars {
+  color: #f59e0b;
+  font-size: 0.9rem;
+}
+
+.review-card p {
+  font-size: 0.88rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+.review-tour {
+  font-size: 0.75rem;
+  color: var(--primary);
+  font-weight: 600;
+  margin-top: auto;
+}
+
+/* ==========================================================================
+   REZERVASIYALAR (BOOKINGS SECTION)
+   ========================================================================== */
+.bookings-section {
+  padding: 64px 0;
+  background: var(--bg-subtle);
+}
+
+.booking-list-container {
+  display: grid;
+  gap: 14px;
+}
+
+.booking-card {
+  background: var(--bg-surface);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border-light);
+  padding: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 18px;
+  box-shadow: var(--shadow-sm);
+}
+
+.booking-badge {
+  display: inline-block;
+  background: var(--ok-bg);
+  color: var(--ok);
+  font-size: 0.72rem;
+  font-weight: 800;
+  padding: 2px 8px;
+  border-radius: var(--radius-full);
+  margin-bottom: 6px;
+}
+
+.booking-card-left h4 {
+  font-size: 1.1rem;
+  font-weight: 800;
+  margin-bottom: 4px;
+}
+
+.booking-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.booking-card-right {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.booking-pricing {
+  text-align: right;
+}
+
+.seats-count {
+  display: block;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+.total-price {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: var(--primary);
+}
+
+.ticket-id-tag {
+  display: block;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.booking-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.empty-bookings {
+  text-align: center;
+  padding: 48px 20px;
+  background: var(--bg-surface);
+  border-radius: var(--radius-lg);
+  border: 1px dashed var(--border-light);
+}
+
+/* ==========================================================================
+   Düymələr (Button System)
+   ========================================================================== */
+.btn {
+  font-family: inherit;
+  font-weight: 700;
+  border: 0;
+  border-radius: var(--radius-md);
+  padding: 10px 20px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  text-align: center;
+  transition: all var(--transition-fast);
+}
+
+.btn-primary {
+  background: var(--primary);
+  color: #fff;
+}
+
+.btn-primary:hover {
+  background: var(--primary-dark);
+}
+
+.btn-ghost {
+  background: transparent;
+  color: var(--text-secondary);
+  border: 1px solid var(--border-light);
+}
+
+.btn-ghost:hover {
+  background: var(--bg-subtle);
+  color: var(--text-primary);
+}
+
+.btn-outline {
+  background: transparent;
+  color: var(--primary);
+  border: 1.5px solid var(--primary);
+}
+
+.btn-outline:hover {
+  background: var(--primary-bg);
+}
+
+.btn-danger {
+  background: var(--bad-bg);
+  color: var(--bad);
+}
+
+.btn-danger:hover {
+  background: #fee2e2;
+}
+
+.btn-sm {
+  padding: 7px 12px;
+  font-size: 0.8rem;
+}
+
+.btn-xs {
+  padding: 4px 8px;
+  font-size: 0.75rem;
+  border-radius: var(--radius-sm);
+}
+
+.btn-block {
+  width: 100%;
+}
+
+/* ==========================================================================
+   MODALLAR VƏ SİYİRMƏLƏR (MODALS & DRAWERS)
+   ========================================================================== */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.65);
+  backdrop-filter: blur(6px);
+  z-index: 200;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+  overflow-y: auto;
+}
+
+.modal-card {
+  background: var(--bg-surface);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-xl);
+  border: 1px solid var(--border-light);
+  position: relative;
+  overflow: hidden;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  animation: modalEnter 0.25s ease forwards;
+}
+
+@keyframes modalEnter {
+  from { opacity: 0; transform: scale(0.96) translateY(10px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+.modal-lg { width: min(800px, 100%); }
+.modal-md { width: min(480px, 100%); }
+.modal-ticket { width: min(420px, 100%); }
+
+.modal-close-btn {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  z-index: 10;
+  background: rgba(0, 0, 0, 0.5);
+  color: #fff;
+  border: 0;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+}
+
+.modal-close-btn:hover {
+  background: rgba(0, 0, 0, 0.8);
+}
+
+/* Tur Detalları Modalı */
+.modal-hero-banner {
+  height: 220px;
+  background-size: cover;
+  background-position: center;
+  position: relative;
+  padding: 24px;
+  display: flex;
+  align-items: flex-end;
+}
+
+.modal-hero-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(15, 23, 42, 0.9) 0%, transparent 80%);
+}
+
+.modal-hero-info {
+  position: relative;
+  z-index: 2;
+  color: #fff;
+  width: 100%;
+}
+
+.tags-group {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+
+.modal-hero-info h2 {
+  font-size: 1.45rem;
+  font-weight: 800;
+  line-height: 1.25;
+}
+
+.modal-hero-sub {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 6px;
+}
+
+.rating-text {
+  color: var(--accent);
+  font-weight: 700;
+}
+
+.price-text {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: #fff;
+}
+
+.modal-tabs {
+  display: flex;
+  border-bottom: 1px solid var(--border-light);
+  background: var(--bg-subtle);
+  overflow-x: auto;
+}
+
+.detail-tab-btn {
+  padding: 12px 18px;
+  background: transparent;
+  border: 0;
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: var(--text-secondary);
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  white-space: nowrap;
+}
+
+.detail-tab-btn.active {
+  color: var(--primary);
+  border-color: var(--primary);
+  background: var(--bg-surface);
+}
+
+.modal-tab-body {
+  padding: 24px;
+  overflow-y: auto;
+  max-height: 380px;
+}
+
+.detail-tab-pane {
+  display: none;
+}
+
+.detail-tab-pane.active {
+  display: block;
+}
+
+.detail-desc-text {
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: var(--text-secondary);
+  margin-bottom: 20px;
+}
+
+.detail-quick-meta {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 14px;
+}
+
+.detail-meta-box {
+  background: var(--bg-subtle);
+  padding: 12px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-light);
+  display: flex;
+  gap: 10px;
+}
+
+.detail-meta-box p {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+}
+
+.itinerary-timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.itinerary-step {
+  display: flex;
+  gap: 14px;
+}
+
+.itinerary-time {
+  background: var(--primary-bg);
+  color: var(--primary);
+  font-weight: 800;
+  font-size: 0.85rem;
+  padding: 4px 8px;
+  border-radius: var(--radius-sm);
+  height: fit-content;
+}
+
+.itinerary-content h5 {
+  font-size: 0.95rem;
+  font-weight: 800;
+  margin-bottom: 2px;
+}
+
+.itinerary-content p {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.inc-exc-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.inc-box, .exc-box {
+  padding: 16px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-light);
+}
+
+.inc-box { background: var(--ok-bg); }
+.exc-box { background: var(--bad-bg); }
+
+.inc-box h4, .exc-box h4 {
+  font-size: 0.95rem;
+  font-weight: 800;
+  margin-bottom: 10px;
+}
+
+.inc-box ul, .exc-box ul {
+  padding-left: 20px;
+  font-size: 0.85rem;
+  line-height: 1.7;
+}
+
+.weather-card-preview {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: var(--bg-subtle);
+  padding: 16px;
+  border-radius: var(--radius-md);
+  margin-bottom: 16px;
+}
+
+.weather-temp {
+  font-size: 1.8rem;
+  font-weight: 800;
+}
+
+.gear-tags {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 8px;
+}
+
+.gear-tag {
+  background: var(--bg-subtle);
+  border: 1px solid var(--border-light);
+  padding: 4px 10px;
+  border-radius: var(--radius-full);
+  font-size: 0.82rem;
+  font-weight: 600;
+}
+
+.modal-footer {
+  padding: 16px 24px;
+  border-top: 1px solid var(--border-light);
+  background: var(--bg-subtle);
+}
+
+/* Rezervasiya Modalı */
+.booking-modal-head {
+  padding: 24px 24px 12px;
+  text-align: center;
+}
+
+.pill-badge {
+  font-size: 0.72rem;
+  font-weight: 800;
+  background: var(--primary-bg);
+  color: var(--primary);
+  padding: 2px 8px;
+  border-radius: var(--radius-full);
+}
+
+.book-tour-title {
+  font-size: 1.2rem;
+  font-weight: 800;
+  margin: 8px 0 4px;
+}
+
+.book-tour-meta {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.book-avail-status {
+  font-size: 0.85rem;
+  color: var(--ok);
+  margin-top: 4px;
+}
+
+.booking-form {
+  padding: 0 24px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.form-group label {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--text-muted);
+}
+
+.form-group input {
+  padding: 10px 12px;
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-md);
+  background: var(--bg-surface);
+  color: var(--text-primary);
+}
+
+.booking-total-banner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: var(--bg-subtle);
+  padding: 14px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-light);
+}
+
+.booking-total-banner strong {
+  font-size: 1.4rem;
+  color: var(--primary);
+}
+
+.form-error-alert {
+  color: var(--bad);
+  font-size: 0.85rem;
+  background: var(--bad-bg);
+  padding: 8px 12px;
+  border-radius: var(--radius-md);
+}
+
+/* Elektron Bilet (Pass) Modalı */
+.ticket-wrapper {
+  background: #fff;
+  color: #0f172a;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+}
+
+.ticket-header {
+  background: #0f766e;
+  color: #fff;
+  padding: 18px 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.ticket-brand {
+  font-weight: 800;
+  letter-spacing: 1px;
+}
+
+.ticket-status-badge {
+  background: #10b981;
+  color: #fff;
+  font-size: 0.72rem;
+  font-weight: 800;
+  padding: 2px 8px;
+  border-radius: var(--radius-sm);
+}
+
+.ticket-body {
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  background: radial-gradient(circle at 0 0, transparent 8px, #fff 8px), radial-gradient(circle at 100% 0, transparent 8px, #fff 8px);
+}
+
+.ticket-field .label {
+  display: block;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  color: #64748b;
+  font-weight: 700;
+}
+
+.val-tour {
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: #0f172a;
+}
+
+.ticket-row-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.ticket-total-row {
+  border-top: 1px dashed #cbd5e1;
+  padding-top: 12px;
+  margin-top: 4px;
+}
+
+.total-big {
+  font-size: 1.4rem;
+  color: #0f766e;
+}
+
+.barcode-code {
+  font-family: monospace;
+  font-weight: 800;
+  font-size: 1.1rem;
+}
+
+.ticket-barcode-wrap {
+  text-align: center;
+  border-top: 1px dashed #cbd5e1;
+  padding-top: 14px;
+}
+
+.fake-barcode {
+  font-family: 'Courier New', monospace;
+  font-size: 1.4rem;
+  letter-spacing: 4px;
+  font-weight: 900;
+  color: #334155;
+}
+
+.ticket-notice {
+  font-size: 0.75rem;
+  color: #64748b;
+  margin-top: 8px;
+}
+
+.ticket-footer-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  padding: 16px 24px;
+  background: #f8fafc;
+  border-top: 1px solid #e2e8f0;
+}
+
+/* Sevimlilər Siyirməsi (Wishlist Drawer) */
+.drawer-panel {
+  position: fixed;
+  top: 0;
+  right: -380px;
+  width: min(360px, 90vw);
+  height: 100vh;
+  background: var(--bg-surface);
+  border-left: 1px solid var(--border-light);
+  box-shadow: var(--shadow-xl);
+  z-index: 300;
+  display: flex;
+  flex-direction: column;
+  transition: right 0.3s ease;
+}
+
+.drawer-panel.open {
+  right: 0;
+}
+
+.drawer-header {
+  padding: 20px;
+  border-bottom: 1px solid var(--border-light);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.drawer-close-btn {
+  background: transparent;
+  border: 0;
+  font-size: 1.2rem;
+  cursor: pointer;
+  color: var(--text-muted);
+}
+
+.drawer-content {
+  padding: 20px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.wishlist-item {
+  display: grid;
+  grid-template-columns: 70px 1fr;
+  gap: 12px;
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-md);
+  padding: 8px;
+  background: var(--bg-main);
+}
+
+.wishlist-item-img {
+  background-size: cover;
+  background-position: center;
+  border-radius: var(--radius-sm);
+  min-height: 60px;
+}
+
+.wishlist-item-info h5 {
+  font-size: 0.85rem;
+  font-weight: 700;
+  line-height: 1.25;
+}
+
+.wishlist-item-meta {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  display: block;
+  margin: 3px 0;
+}
+
+.wishlist-item-actions {
+  display: flex;
+  gap: 6px;
+}
+
+.empty-wishlist {
+  text-align: center;
+  padding: 40px 10px;
+  color: var(--text-muted);
+}
+
+/* Bildiriş Toast */
+.toast-notification {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%) translateY(30px);
+  background: #0f172a;
+  color: #fff;
+  padding: 12px 22px;
+  border-radius: var(--radius-full);
+  box-shadow: var(--shadow-xl);
+  z-index: 400;
+  font-size: 0.9rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  opacity: 0;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  pointer-events: none;
+}
+
+.toast-notification.show {
+  transform: translateX(-50%) translateY(0);
+  opacity: 1;
+}
+
+/* ==========================================================================
+   FOOTER (SAYT AYAĞI)
+   ========================================================================== */
+.site-footer {
+  background: var(--bg-surface);
+  border-top: 1px solid var(--border-light);
+  padding: 64px 0 24px;
+}
+
+.footer-grid {
+  display: grid;
+  grid-template-columns: 1.6fr 1fr 1fr 1.2fr;
+  gap: 36px;
+  margin-bottom: 48px;
+}
+
+.brand-col .footer-about {
+  font-size: 0.88rem;
+  color: var(--text-secondary);
+  margin: 14px 0 16px;
+  line-height: 1.6;
+}
+
+.ssl-badge {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--ok);
+  background: var(--ok-bg);
+  padding: 4px 10px;
+  border-radius: var(--radius-sm);
+}
+
+.footer-col h4 {
+  font-size: 1rem;
+  font-weight: 800;
+  margin-bottom: 16px;
+}
+
+.footer-col ul {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.footer-col ul a {
+  font-size: 0.88rem;
+  color: var(--text-secondary);
+  transition: color var(--transition-fast);
+}
+
+.footer-col ul a:hover {
+  color: var(--primary);
+}
+
+.footer-col p {
+  font-size: 0.88rem;
+  color: var(--text-secondary);
+  margin-bottom: 8px;
+}
+
+.footer-bottom {
+  border-top: 1px solid var(--border-light);
+  padding-top: 24px;
+  text-align: center;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+/* ==========================================================================
+   RESPONSIV DİZAYN (MEDIA QUERIES)
+   ========================================================================== */
+@media (max-width: 992px) {
+  .live-check-card {
+    grid-template-columns: 1fr;
+  }
+
+  .calc-body-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .footer-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .header-inner {
+    height: 64px;
+  }
+
+  .nav-menu {
+    position: fixed;
+    top: 64px;
+    left: 0;
+    right: 0;
+    background: var(--bg-surface);
+    border-bottom: 1px solid var(--border-light);
+    flex-direction: column;
+    padding: 20px;
+    gap: 16px;
+    box-shadow: var(--shadow-lg);
+    display: none;
+  }
+
+  .nav-menu.open {
+    display: flex;
+  }
+
+  .mobile-menu-btn {
+    display: flex;
+  }
+
+  .top-bar {
+    display: none;
+  }
+
+  .hero-stats {
+    flex-wrap: wrap;
+    gap: 14px;
+  }
+
+  .stat-divider {
+    display: none;
+  }
+
+  .live-filter-row {
+    grid-template-columns: 1fr;
+  }
+
+  .tour-cards-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .form-row {
+    grid-template-columns: 1fr;
+  }
+
+  .inc-exc-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .footer-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Region places modal (Firebase data) */
+.region-places-btn{background:var(--primary);color:#fff;border:0;border-radius:var(--radius-full);padding:3px 10px;font-size:.78rem;font-weight:700;cursor:pointer}
+.rp-overlay{position:fixed;inset:0;background:rgba(5,10,25,.6);display:grid;place-items:center;padding:16px;z-index:9999}
+.rp-box{background:var(--bg-surface);color:var(--text-primary);border-radius:var(--radius-lg);max-width:640px;width:100%;max-height:85vh;overflow:auto;padding:22px;box-shadow:var(--shadow-lg)}
+.rp-box h3{margin:0 0 12px}
+.rp-item{padding:10px 0;border-top:1px solid var(--border-light)}
+.rp-item b{display:block}
+.rp-item span{font-size:.85rem;color:var(--text-muted)}
+.rp-close{float:right;border:0;background:transparent;font-size:1.4rem;cursor:pointer;color:inherit}
